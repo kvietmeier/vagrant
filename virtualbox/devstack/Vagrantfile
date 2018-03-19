@@ -1,0 +1,66 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Create a single Ubuntu VM for Devstack "all-in-one"
+
+nodes = {
+ 'devstack01' => [1, 51],
+}
+
+# Define some variables
+ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+
+# Run Vagrant configuration
+Vagrant.configure("2") do |config| 
+  config.vm.box = "ubuntu/trusty64"
+
+  # Default is 2200..something, but port 2200 is used by forescout NAC agent.
+  config.vm.usable_port_range= 2800..2900
+
+  nodes.each do |prefix, (count, ip_start)|
+    count.times do |i|
+      hostname = "%s" % [prefix, (i+1)]
+      
+      config.vm.define "#{hostname}" do |box|
+        box.vm.hostname = "#{hostname}.book"
+        box.vm.network :private_network, ip: "172.16.0.#{ip_start+i}", :netmask => "255.255.0.0"
+        box.vm.network :private_network, ip: "172.10.10.#{ip_start+i}", :netmask => "255.255.255.0" 
+        box.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", 4096]
+        vb.customize ["modifyvm", :id, "--cpus", 1]
+        end # box.vm
+
+      # Do some Shell provisioning to copy files and add keys
+      # Fix for no tty with Ubuntu - need if statement because this breaks with centos
+      config.vm.provision "fix-no-tty", type: "shell" do |s|
+        s.privileged = false
+        # sudo echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+        s.inline = <<-SHELL
+          sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile
+        SHELL
+      end # Shell provision
+
+      # Add my public key
+      config.vm.provision "Copy my keys", type: "shell" do |s|
+        s.inline = <<-SHELL
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+          echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+        SHELL
+      end # Shell config.provision
+
+      # Ansible Provisioner - 
+      # Use :ansible or :ansible_local to select the provisioner of your choice
+      config.vm.provision :ansible do |ansible|
+        ansible.playbook = "provisioning/playbook.yml"
+      end # Ansible vm.provision
+
+      #config.vm.provision "Mount /vagrant", type: "shell" do |s|
+      #  s.inline = <<-SHELL
+      #    sudo mount.vboxsf vagrant /vagrant
+      #  SHELL
+      #end # Shell config.provision
+      
+      end # config.vm.define 
+    end # count.times
+  end # nodes.each
+end # Vagrant.configure("2")

@@ -1,0 +1,65 @@
+---
+# File: projects/vagrant/multi-test/servers.yml
+# Data structure for including in a Vagrantfile
+# Builds a set of severs based on the yaml data structure in this file
+# From: http://blog.scottlowe.org/2014/10/22/multi-machine-vagrant-with-yaml/
+# Modified By: Karl Vietmeier
+# The newtworks can be configured by uncommenting the appropriate line in the Vagrantfile.
+
+#  ssh_user: vagrant
+#  ssh_pass: vagrant
+#  ssh_user: ubuntu
+#  ssh_pass: ubuntu
+
+###--- Create Centos and Atomic hosts for Kubernetes testing
+# Centos - Kuberntees Master
+- name: kubemaster01
+  box: relativkreativ/centos-7-minimal
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.10.100
+  ip2: 172.16.0.100
+  ip3: 192.168.100.100
+- name: worker01
+  box: centos/atomic-host
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.10.101
+  ip2: 172.16.0.101
+  ip3: 192.168.100.101
+#- name: worker02
+#  box: centos/atomic-host
+#  os: centos
+#  ram: 512
+#  cpus: 1
+#  ip1: 172.10.10.102
+#  ip2: 172.16.0.102
+#  ip3: 192.168.100.102
+#- name: worker03
+#  box: centos/atomic-host
+#  os: centos
+#  ram: 512
+#  cpus: 1
+#  ip1: 172.10.10.103
+#  ip2: 172.16.0.103
+#  ip3: 192.168.100.103
+#- name: worker04
+#  box: centos/atomic-host
+#  os: centos
+#  ram: 512
+#  cpus: 1
+#  ip1: 172.10.10.104
+#  ip2: 172.16.0.104
+#  ip3: 192.168.100.104
+#- name: worker05
+#  box: centos/atomic-host
+#  os: centos
+#  ram: 512
+#  cpus: 1
+#  ip1: 172.10.10.105
+#  ip2: 172.16.0.105
+#  ip3: 192.168.100.105
+#
+...

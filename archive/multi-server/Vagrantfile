@@ -1,0 +1,77 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+# Vagrantfile to create multiple generic virtual machines based on a yaml dictionary.
+#
+#    From: http://blog.scottlowe.org/2014/10/22/multi-machine-vagrant-with-yaml/
+#    Modfified By: Karl Vietmeier
+#
+# Requires "servers.yml" to be in local directory
+ 
+# Specify minimum Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+ 
+# Require YAML module
+require 'yaml'
+ 
+# Read YAML file with box details
+servers = YAML.load_file('servers.yml')
+
+# Define some variables
+ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+ssh_user = "vagrant"
+ssh_pass = "vagrant"
+
+# Create Virtual Machines
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Default is 2200..something, but port 2200 is used by some tools
+  config.vm.usable_port_range = 2800..2900
+ 
+  # Iterate through entries in YAML file
+  servers.each do |servers|
+    config.vm.define servers["name"] do |srv|
+      srv.vm.box = servers["box"]
+      srv.ssh.username = servers["ssh_user"]
+      srv.ssh.password = servers["ssh_pass"]
+      srv.vm.hostname = servers["name"]
+      srv.vm.network "private_network", ip: servers["ip1"]
+      srv.vm.network "private_network", ip: servers["ip2"]
+      #srv.vm.network "private_network", ip: servers["ip3"]  
+
+      # VM parameters
+      srv.vm.provider :virtualbox do |vb|
+        vb.name = servers["name"]
+        vb.memory = servers["ram"]
+        vb.cpus = servers["cpus"]
+      end
+
+      ### We want to add the local user's public key to .ssh/authorized_keys
+      # Fix for no tty with Ubuntu - need if statement because this breaks with centos
+      if servers["os"] == "ubuntu"
+        config.vm.provision "fix-no-tty", type: "shell" do |s|
+          s.privileged = false
+          # sudo echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+          s.inline = <<-SHELL
+            sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile
+          SHELL
+        end # provision
+      end # if
+      
+      # Add the public key
+      config.vm.provision "Copy my keys", type: "shell" do |s|
+        s.inline = <<-SHELL
+          mkdir /root/.ssh
+          chmod 700 /root/.ssh
+          touch /root/.ssh/authorized_keys
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+          echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+          sudo cp /vagrant/files/hosts /etc/hosts
+        SHELL
+      end # config.provision
+    end  # config.vm.define
+  end  #servers.each
+end  # Vagrant.configure
+
+
+

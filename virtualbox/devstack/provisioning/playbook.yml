@@ -1,0 +1,115 @@
+---
+# Vagrant provisioner playbook for Devstack on Ubuntu
+#
+
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: "Ubuntu: Install a Bunch of Useful Packages you will need eventually"
+      apt: name={{ item }} state=present
+      sudo: yes
+      with_items: 
+         - psmisc
+         - coreutils
+         - sysfsutils
+         - findutils
+         - net-tools
+         - util-linux
+         - xfsprogs
+         - git
+         - wget
+         - bzip2
+         - blktrace
+         - lsof
+         - sysstat
+         - screen
+         - tree
+         - ipmitool
+         - dstat
+         - mlocate
+         - smartmontools
+         - rpcbind
+         - ftp
+         - python
+      tags:
+         - pkgs
+
+    # Upgrade Debian/Ubuntu based systems and reboot if necessary.
+    # Ubuntu seemd kind of flaky here - can end up with an unusable system
+    - name: "Ubuntu: Install Ubuntu Development Tools"
+      apt: name=build-essential state=present
+      sudo: yes
+      tags: 
+         - pkgs
+
+    - name: "Ubuntu: Install Bunch of Useful Packages"
+      apt: name={{ item }} state=present update_cache=yes
+      sudo: yes
+      with_items: 
+         - nfs-common
+         - linux-tools-lowlatency
+         - linux-tools-virtual
+         - linux-tools-common
+         - linux-tools-generic
+         - dnsutils
+         - ldap-utils
+         - libpam-ldap
+         - libnss-ldap
+         - nslcd
+      tags: 
+          - pkgs
+
+    - name: "Ubuntu: Check if there are packages available to be installed/upgraded"
+      command: /usr/lib/update-notifier/apt-check --package-names
+      sudo: yes
+      register: packages
+      tags:
+         - pkgs
+
+    - name: "Update apt cache"
+      apt: update_cache=yes cache_valid_time=3600
+      sudo: yes
+      tags:
+         - pkgs
+
+    - name: "Ubuntu: Upgrade all packages to the latest version"
+      apt: upgrade=dist
+      sudo: yes
+      tags:
+        - pkgs
+
+    - name: "All: Update Man Page Database"
+      command: mandb
+      sudo: yes
+      tags:
+      - pkgs
+
+    - name: "Clone Devstack repo"
+      git: repo=https://git.openstack.org/openstack-dev/devstack 
+           dest=/home/vagrant/stack 
+           clone=yes
+
+    - name: "Ubuntu: Check if a reboot is required"
+      register: file
+      sudo: yes
+      stat: path=/var/run/reboot-required get_md5=no
+      tags:
+        - pkgs
+
+    - name: "Ubuntu: Reboot the server"
+      # need the sleep statement as shell - https://github.com/ansible/ansible/issues/10616
+      shell: sleep 2 && shutdown -r now "Reboot triggered by Ansible"
+      sudo: yes
+      async: 1
+      poll: 0
+      ignore_errors: true
+      notify: 
+        - Wait for restart
+      tags:
+         - pkgs
+
+
+
+...
+
