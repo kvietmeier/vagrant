@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Need to update with correct box and network setup.
+
+Vagrant.configure("2") do |config|
+ 
+  # Vagrant Box for Photon
+  # Need Vagrant plugin
+  # https://github.com/vmware/vagrant-guests-photon
+  # vagrant plugin install vagrant-guests-photon
+  # Box - 
+  # https://app.vagrantup.com/vmware/boxes/photon
+  # vagrant box add vmware/photon
+  
+  
+  config.vm.box = "vmware/photon"
+
+  # VM customization
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ['modifyvm', :id, '--acpi', 'off']
+  end
+
+  # No VBox tools installed 
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end
