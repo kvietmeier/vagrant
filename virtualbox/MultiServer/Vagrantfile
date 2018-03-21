@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       ### We want to add the local user's public key to .ssh/authorized_keys 
       ### and get a working /etc/hosts
-      config.vm.provision "Copy my keys", type: "shell" do |s|
+      config.vm.provision "Setup shell environment", type: "shell" do |s|
         s.inline = <<-SHELL
           # Add the public key
           mkdir /root/.ssh

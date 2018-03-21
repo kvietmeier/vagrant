@@ -6,10 +6,6 @@
 # Modified By: Karl Vietmeier
 # The newtworks can be configured by uncommenting the appropriate line in the Vagrantfile.
 
-# box: ubuntu/ubuntu-15.04-snappy-core-stable
-# box: ubuntu/vivid64
-# box: relativkreativ/centos-7-minimal
-
 #  ssh_user: vagrant
 #  ssh_pass: vagrant
 
@@ -31,3 +27,37 @@
   ip1: 172.10.0.101
   ip2: 172.16.0.101
   ip3: 192.168.100.101
+- name: worker02
+  box: centos/atomic-host
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.102
+  ip2: 172.16.0.102
+  ip3: 192.168.100.102
+- name: worker03
+  box: centos/atomic-host
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.103
+  ip2: 172.16.0.103
+  ip3: 192.168.100.103
+- name: worker04
+  box: centos/atomic-host
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.104
+  ip2: 172.16.0.104
+  ip3: 192.168.100.104
+- name: worker05
+  box: centos/atomic-host
+  os: centos
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.105
+  ip2: 172.16.0.105
+  ip3: 192.168.100.105
+
+...
