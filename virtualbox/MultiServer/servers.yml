@@ -11,6 +11,7 @@
 
 ###--- Create Centos and Centos-Atomic VMs for K8s
 # Centos
+# 172.16.0.0 is the default subnet for Docker networking
 - name: master
   box: centos/7
   os: centos
