@@ -1,10 +1,10 @@
 ## Vagrant Projects
 
-I am working on setting up Vagrant for Windows 10 and experimenting with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HypedrV for now, there are juust too many bugs and challenges with networking and mounting shared folders.  
+I am working on setting up Vagrant for Windows 10 and experimenting with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV for now, there are just too many bugs and challenges with networking and mounting shared folders.  I really wanted to use HyperV since it is required if you want to install and use Docker4Windows and I wanted to use a completely Microsoft/Windows toolset.  But both D4W and HyperV are still WIP.
 
 VMware Workstation is TBD
 
-I have decided to go "All In" with Windows so all of these examples assume Windows 10 "Holiday Edition" and PowerShell
+NOTE - All of these examples assume Windows 10 "Holiday Edition" and PowerShell.   
 
 
 ## Getting Started
