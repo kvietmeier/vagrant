@@ -12,27 +12,33 @@ Vagrant.configure("2") do |config|
  
    # Provider-specific configuration so you can fine-tune various
    # backing providers for Vagrant. These expose provider-specific options.
-   config.vm.provider "virtualbox" do |v|
+   config.vm.provider "virtualbox" do |vb|
     
     # Need to enable more than one CPU and things like SATA controllers
-    v.customize ["modifyvm", :id, "--ioapic", "on" ]
+    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
 
     # Customize the amount of memory and CPU oin the VM:
-    v.customize ["modifyvm", :id, "--memory", "512" ]
-    v.customize ["modifyvm", :id, "--cpus", "1" ]
+    vb.customize ["modifyvm", :id, "--memory", "512" ]
+    vb.customize ["modifyvm", :id, "--cpus", "1" ]
 
     # Make sure things are stripped down
-    v.customize ["modifyvm", :id, "--audio", "none" ]
-    v.customize ["modifyvm", :id, "--usb", "off" ]
+    vb.customize ["modifyvm", :id, "--audio", "none" ]
+    vb.customize ["modifyvm", :id, "--usb", "off" ]
 
     # Add a SATA controller with n numbder of ports
-    v.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 4]
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 4]
     
     unless File.exist?("osd-disk01.vdi")
-      v.customize ['createhd', '--filename', "osd-disk01.vdi", '--size', 1024]
+      vb.customize ['createhd', '--filename', "osd-disk01.vdi", '--size', 1024]
     end  # End check disk
 
-    v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', "./osd-disk01.vdi"]
+    vb.customize [
+      'storageattach', :id, 
+      '--storagectl', 
+      'SATA Controller', 
+      '--port', 1, '--device', 0, 
+      '--type', 'hdd', 
+      '--medium', "./osd-disk01.vdi"]
 
   
   
