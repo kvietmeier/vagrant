@@ -1,3 +1,7 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Setup VMs with multiple disks
+
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
    # Hostname
@@ -10,37 +14,30 @@ Vagrant.configure("2") do |config|
    config.vm.network "private_network", ip: "172.16.0.201"
    config.vm.network "private_network", ip: "172.10.0.201"
  
-   # Provider-specific configuration so you can fine-tune various
-   # backing providers for Vagrant. These expose provider-specific options.
+   # Configure/Provision VMs
    config.vm.provider "virtualbox" do |vb|
     
-    # Need to enable more than one CPU and things like SATA controllers
+    # Need this to enable more than one CPU and things like SATA controllers
     vb.customize ["modifyvm", :id, "--ioapic", "on" ]
 
-    # Customize the amount of memory and CPU oin the VM:
+    # Customize the amount of memory and CPU in the VM:
     vb.customize ["modifyvm", :id, "--memory", "512" ]
     vb.customize ["modifyvm", :id, "--cpus", "1" ]
 
-    # Make sure things are stripped down
+    # Turn off extra HW
     vb.customize ["modifyvm", :id, "--audio", "none" ]
     vb.customize ["modifyvm", :id, "--usb", "off" ]
 
     # Add a SATA controller with n numbder of ports
     vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 4]
     
+    # Create drive/s 
     unless File.exist?("osd-disk01.vdi")
       vb.customize ['createhd', '--filename', "osd-disk01.vdi", '--size', 1024]
     end  # End check disk
 
-    vb.customize [
-      'storageattach', :id, 
-      '--storagectl', 
-      'SATA Controller', 
-      '--port', 1, '--device', 0, 
-      '--type', 'hdd', 
-      '--medium', "./osd-disk01.vdi"]
-
-  
+    # Attach the drive to the controller
+    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', "./osd-disk01.vdi"]
   
   end # End Provider
 end
