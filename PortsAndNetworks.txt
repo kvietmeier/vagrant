@@ -1,0 +1,46 @@
+#  Track Ports and Networks for Vagrant Environments
+
+###  Ports for Port Forwarding
+# SSH
+2800-2900   Default Dynamic Range
+3800-3900   Multi Server testing
+9000  Admin VM
+
+# HTTP/Server
+
+
+# Kubernetes
+
+
+
+###-------  Subnets/IP Addresses
+
+172.16.0.0/24
+172.16.0.1      Gateway
+172.16.0.2      Gateway
+172.16.0.3      Gateway
+
+
+172.16.0.100    Master  (Multiserver)
+172.16.0.101    worker01  (Multiserver)
+172.16.0.102    worker02  (Multiserver)
+172.16.0.103    worker03  (Multiserver)
+172.16.0.104    worker04  (Multiserver)
+172.16.0.105    worker05  (Multiserver)
+
+172.16.0.201    multidisk01  (MultiDisk)
+
+
+172.10.0.0/24
+172.10.0.1      Gateway
+172.10.0.2      Gateway
+172.10.0.3      Gateway
+
+172.16.0.100    Master  (Multiserver)
+172.10.0.101    worker01  (Multiserver)
+172.10.0.102    worker02  (Multiserver)
+172.10.0.103    worker03  (Multiserver)
+172.10.0.104    worker04  (Multiserver)
+172.10.0.105    worker05  (Multiserver)
+
+172.10.0.201    multidisk01  (MultiDisk)

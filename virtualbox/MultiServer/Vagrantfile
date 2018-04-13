@@ -38,12 +38,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.network "private_network", ip: servers["ip1"]
       srv.vm.network "private_network", ip: servers["ip2"]
       #srv.vm.network "private_network", ip: servers["ip3"]  
+      srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
 
       # VM parameters
       srv.vm.provider :virtualbox do |vb|
         vb.name = servers["name"]
         vb.memory = servers["ram"]
         vb.cpus = servers["cpus"]
+        
+        # Create drive/s 
+        unless File.exist?("#{servers["name"]}OSD-01.vdi")
+         vb.customize ['createhd', '--filename', "#{servers["name"]}OSD-01.vdi", '--size', 1024]
+        end  # End create disk
+        
+        vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 4]
       end # vm.provider
 
       ### We want to add the local user's public key to .ssh/authorized_keys 
