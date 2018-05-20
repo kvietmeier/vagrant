@@ -23,15 +23,33 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|
    # Customize the amount of memory on the VM:
    vb.memory = "1024"
+   vb.cpus = "1"
    vb.name = "centos"
 
-   sata_disk = 'sata.vdi'
-   unless File.exist? (sata_disk)
-    vb.customize ["createhd", "--filename", sata_disk, "--variant", "Fixed", "--size", "1024"]
-    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
-    vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--type", "hdd", "--medium", sata_disk, "--port", "0", "--nonrotational", "on"]
-   end
+   # Configure system parameters - get rid of extra stuff
+   vb.customize ["modifyvm", :id, "--ioapic", "on" ]
+   vb.customize ["modifyvm", :id, "--audio", "none" ]
+   vb.customize ["modifyvm", :id, "--usb", "off" ]
+
+   #sata_disk = 'sata.vdi'
+   #unless File.exist? (sata_disk)
+   # vb.customize ["createhd", "--filename", sata_disk, "--variant", "Fixed", "--size", "1024"]
+   # vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+   # vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--type", "hdd", "--medium", sata_disk, "--port", "0", "--nonrotational", "on"]
+   #end
 
   end # end Provider
+
+  # Provisioner
+  config.vm.provision "Setup shell environment", type: "shell" do |s|
+    s.inline = <<-SHELL
+    yum install -y net-tools traceroute 
+    #yum update -y
+    SHELL
+  end
+
+
+
+
 
 end # end configure(2)
