@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# Setup VMs with multiple disks
+# Setup VM with multiple disks
+# Created By: Karl Vietmeier
 
 Vagrant.configure("2") do |config|
 

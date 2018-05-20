@@ -6,7 +6,6 @@ VMware Workstation is TBD
 
 NOTE - All of these examples assume Windows 10 "Holiday Edition" and PowerShell.   
 
-
 ## Getting Started
 
 You need these:

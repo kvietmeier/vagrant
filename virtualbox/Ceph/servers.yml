@@ -1,13 +1,11 @@
 ---
-# Data structure for includng in a Vagrantfile
+# Data structure for including in a Vagrantfile
 # Builds a set of severs based on the yaml data structure in this file
 # Created By: Karl Vietmeier
 # The newtworks can be configured by uncommenting the appropriate line in the Vagrantfile.
 
 #  ssh_user: vagrant
 #  ssh_pass: vagrant
-#  ram: 512
-#  cpus: 1
 
 ###--- Create Centos and Centos-Atomic VMs for Ceph
 - name: admin
