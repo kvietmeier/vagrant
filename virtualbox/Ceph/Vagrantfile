@@ -4,7 +4,7 @@
 # Requires "servers.yml" to be in local directory
 #
 # Will create multiple nodes with several disks per node
-# http://gbraad.nl/blog/deployment-of-ceph-using-custom-atomic-images.html
+# Created By: Karl Vietmeier
  
 # Specify minimum Vagrant version and Vagrant API version
 Vagrant.require_version ">= 1.6.0"
@@ -66,14 +66,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           # Create OSD drive/s 
           unless File.exist?("#{servers["name"]}-OSD-0#{num}.vdi")
             vb.customize ['createhd', '--filename', "#{servers["name"]}-OSD-0#{num}.vdi", '--size', 512]
-          end  # End create disk
+          end  # End create OSD drive
 
           # Attach the disks to the SATA controller
           vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "#{num}", '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-OSD-0#{num}.vdi"]
 
           # Add 1 to get port for Journal disk
           $port = num += 1
-        end # Create/attach disks  
+        end # Create/attach OSD disks  
 
         # Create Journal Drive
         unless File.exist?("#{servers["name"]}-Journal.vdi")

@@ -1,5 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+# Created By: Karl Vietmeier
+# Basic Vagrantfile for a single VM
 
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -24,11 +26,11 @@ Vagrant.configure(2) do |config|
    vb.name = "centos"
 
    sata_disk = 'sata.vdi'
-      unless File.exist? (sata_disk)
-        vb.customize ["createhd", "--filename", sata_disk, "--variant", "Fixed", "--size", "1024"]
-        vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
-        vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--type", "hdd", "--medium", sata_disk, "--port", "0", "--nonrotational", "on"]
-      end
+   unless File.exist? (sata_disk)
+    vb.customize ["createhd", "--filename", sata_disk, "--variant", "Fixed", "--size", "1024"]
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+    vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--type", "hdd", "--medium", sata_disk, "--port", "0", "--nonrotational", "on"]
+   end
 
   end # end Provider
 
