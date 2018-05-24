@@ -1,55 +1,98 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 # Created By: Karl Vietmeier
-# Basic Vagrantfile for a single VM
+# Basic Vagrantfile for a single VM with comments
 
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
 
-  # Hostname
+  # Set the VM OS level Hostname
   config.vm.hostname = "centos"
+
+  ###------- Network setup section - not Provider specific
+  # You can create additional private networks which are configured as host-only networks by the Provider
+  # If you don't create a private network the default NAT network of the provider will be used.
+  # The first interface will always be the default NAT network, private networks get added as additional
+  # interfaces
+  # If the network doesn't exist - based on Subnet - it will be created in the Provider (VBox, VMware) 
+
+  # Define a range of usable ports for automatic port mapping
   config.vm.usable_port_range= 2800..2900
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
+  # Create 2 interfaces on 2 host-only networks
   config.vm.network "private_network", ip: "172.16.0.200"
   config.vm.network "private_network", ip: "172.10.0.200"
+
+  # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
+  # unused port in the above range
   config.vm.network "forwarded_port", guest: 22, host: 2250
   config.vm.network "forwarded_port", guest: 80, host: 2899
   config.vm.network "forwarded_port", guest: 8080, host: 2900
 
+  ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider "virtualbox" do |vb|
-   # Customize the amount of memory on the VM:
+   
+   # Confifgure the amount of memory and number of CPUs for the VM:
    vb.memory = "1024"
    vb.cpus = "1"
+
+   # Set the name in Virtualbox (GUI and CLI)
    vb.name = "centos"
 
-   # Configure system parameters - get rid of extra stuff
+   ###-------  Configure low level system parameters
+   # - get rid of extra stuff
+   # - need "ioapic on" when adding extra drives
+   # - use "vb.customize" when modifying parameters that don't have predefined aliases like "vb.cpu"
    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
    vb.customize ["modifyvm", :id, "--audio", "none" ]
    vb.customize ["modifyvm", :id, "--usb", "off" ]
 
-   #sata_disk = 'sata.vdi'
-   #unless File.exist? (sata_disk)
-   # vb.customize ["createhd", "--filename", sata_disk, "--variant", "Fixed", "--size", "1024"]
-   # vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
-   # vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--type", "hdd", "--medium", sata_disk, "--port", "0", "--nonrotational", "on"]
-   #end
+   ###-------  Create/Attach additional drives section -------###
+   sata_disk = 'sata.vdi'
+   unless File.exist? (sata_disk)
+    # Create the drive
+    vb.customize [ "createhd",
+      "--filename", sata_disk,
+      "--variant", "Fixed",
+      "--size", "1024"
+    ]
+    # Define the controller
+    vb.customize ['storagectl', :id,
+      '--name', 'SATA Controller',
+      '--add', 'sata',
+      '--controller', 'IntelAhci',
+      '--portcount', 6
+    ]
+    # Attache drive to the controller
+    vb.customize ["storageattach", :id, 
+      "--storagectl", "SATA Controller",
+      "--type", "hdd",
+      "--medium", sata_disk,
+      "--port", "1",
+      "--nonrotational", "on"
+    ]
+   end
+   ###-------  End: Create/Attach additional drives section -------###
 
-  end # end Provider
+  end ###--- End Provider
 
   # Provisioner
   config.vm.provision "Setup shell environment", type: "shell" do |s|
     s.inline = <<-SHELL
-    yum install -y net-tools traceroute 
-    #yum update -y
+    ### Run standard bash commands
+    # Install some useful tools and update the system
+    #yum update -y > /dev/null 2>&1
+    yum install -y net-tools traceroute ansible > /dev/null 2>&1 
+
+
+
     SHELL
-  end
+  end ###--- End Provisioner
 
 
 
 
 
-end # end configure(2)
+end ###--- End configure(2) - this wraps up the wholething - like main()

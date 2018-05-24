@@ -58,31 +58,32 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
 
         ###-------- Disk setup ---------###
-        ## TBD - check the hostmame - only add extra drives to the OSD nodes, not admin or mons.
-        #if ("#{servers["name"]}" )
+        ## Check the hostmame - only add extra drives to the OSD nodes, not admin or mons.
+        if ("#{servers["name"]}").include? "osd"
         
-        # Loop and create/attach the OSD disks
-        (1..3).each do |num|
-          # Create OSD drive/s 
-          unless File.exist?("#{servers["name"]}-OSD-0#{num}.vdi")
-            vb.customize ['createhd', '--filename', "#{servers["name"]}-OSD-0#{num}.vdi", '--size', 512]
-          end  # End create OSD drive
+          # Loop and create/attach the OSD disks
+         (1..3).each do |num|
+           # Create OSD drive/s 
+           unless File.exist?("#{servers["name"]}-OSD-0#{num}.vdi")
+             vb.customize ['createhd', '--filename', "#{servers["name"]}-OSD-0#{num}.vdi", '--size', 512]
+           end  # End create OSD drive
 
-          # Attach the disks to the SATA controller
-          vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "#{num}", '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-OSD-0#{num}.vdi"]
+            # Attach the disks to the SATA controller
+            vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "#{num}", '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-OSD-0#{num}.vdi"]
 
-          # Add 1 to get port for Journal disk
-          $port = num += 1
-        end # Create/attach OSD disks  
+            # Add 1 to get port for Journal disk
+            $port = num += 1
+          end # Create/attach OSD disks  
 
-        # Create Journal Drive
-        unless File.exist?("#{servers["name"]}-Journal.vdi")
-          vb.customize ['createhd', '--filename', "#{servers["name"]}-Journal.vdi", '--size', 256]
-        end  # End journal create disk
+          # Create Journal Drive
+          unless File.exist?("#{servers["name"]}-Journal.vdi")
+            vb.customize ['createhd', '--filename', "#{servers["name"]}-Journal.vdi", '--size', 256]
+          end  # End journal create disk
 
-        # Attach journal disk to $port on SATA controller
-        vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', $port, '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-Journal.vdi"]
-        
+          # Attach journal disk to $port on SATA controller
+          vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', $port, '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-Journal.vdi"]
+
+        end  # End if - check for osd nodes
         ###-------- End Disk Setup Section ---------###
 
       end # vm.provider
