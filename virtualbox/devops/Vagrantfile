@@ -1,8 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-
-### This version is working needed the correct box with Network Manager disabled ###
+### Multi node example
 ### Creates 3 VMs from the "nodes" hash
+### Example of using a hash created in the Vagrant file and setting IP from a hash value
 
 # We set the last octet in IPV4 address here
 nodes = {
@@ -14,7 +14,6 @@ nodes = {
 Vagrant.configure("2") do |config| 
   # Virtualbox
   config.vm.box = "bento/centos-7.4"
-
 
   # Default is 2200..something, but port 2200 is used by forescout NAC agent.
   config.vm.usable_port_range= 2800..2900
@@ -43,7 +42,7 @@ Vagrant.configure("2") do |config|
 
   # Do some provisioning
   config.vm.provision "shell", inline: <<-SHELL
-    echo "Placeholder"
+    echo "Shell Provisioner Placeholder"
   SHELL
 
 end # Vagrant.configure("2")
