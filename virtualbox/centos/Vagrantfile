@@ -52,28 +52,30 @@ Vagrant.configure(2) do |config|
    ###-------  Create/Attach additional drives section -------###
    sata_disk = 'sata.vdi'
    unless File.exist? (sata_disk)
-    # Create the drive
-    vb.customize [ "createhd",
-      "--filename", sata_disk,
-      "--variant", "Fixed",
-      "--size", "1024"
-    ]
-    # Define the controller
-    vb.customize ['storagectl', :id,
-      '--name', 'SATA Controller',
-      '--add', 'sata',
-      '--controller', 'IntelAhci',
-      '--portcount', 6
-    ]
-    # Attache drive to the controller
-    vb.customize ["storageattach", :id, 
-      "--storagectl", "SATA Controller",
-      "--type", "hdd",
-      "--medium", sata_disk,
-      "--port", "1",
-      "--nonrotational", "on"
-    ]
-   end
+      vb.customize [ "createhd",
+        "--filename", sata_disk,
+        "--variant", "Fixed",
+        "--size", "1024"
+      ]
+    end
+      
+   # Define the controller
+   vb.customize ['storagectl', :id,
+    '--name', 'SATA Controller',
+    '--add', 'sata',
+    '--controller', 'IntelAhci',
+    '--portcount', 6
+   ]
+      
+   # Attach drive to the controller
+   vb.customize ["storageattach", :id, 
+    "--storagectl", "SATA Controller",
+    "--type", "hdd",
+    "--medium", sata_disk,
+    "--port", "1",
+    "--nonrotational", "on"
+   ]
+
    ###-------  End: Create/Attach additional drives section -------###
 
   end ###--- End Provider
