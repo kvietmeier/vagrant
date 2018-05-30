@@ -1,4 +1,4 @@
-# Multinode project using a hash definded in the Vagrantfile
+### Multinode project using a hash definded in the Vagrantfile
 
 **Goal:**
 A working multinode project o test cresting multiple nodes and provisioning.

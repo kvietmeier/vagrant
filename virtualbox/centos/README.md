@@ -1,4 +1,4 @@
-# Commented example of creating a single VM
+### Commented example of creating a single VM
 
 **Goal:**
 Demonstrate the core sections of a Vagrantfile and common VM configuration tasks to provide a basis for more advanced configurations and Vagrantfiles.  

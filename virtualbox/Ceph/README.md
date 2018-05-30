@@ -1,4 +1,4 @@
-# Create a multinode project with attached disks for Ceph or other SDS solutions
+### Create a multinode project with attached disks for Ceph or other SDS solutions
 
 **Goal:**
 Provide a working platform for testing Ceph installation with Ansible and basic cluster functionality

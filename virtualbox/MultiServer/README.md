@@ -1,4 +1,4 @@
-# Multinode project with attached disks for Kubernetes/Docker or any distributed platform
+### Multinode project with attached disks for Kubernetes/Docker or any distributed platform
 
 **Goal:**
 Provide a working platform for testing Kubernetes installation, configuration, and basic cluster functionality
