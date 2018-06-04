@@ -3,6 +3,14 @@
 # Created By: Karl Vietmeier
 # Basic Vagrantfile for a single VM with comments
 
+### Set some variables
+# Path to the local users public key file in $HOME/.ssh
+# We use it later in the shell provisioner to populate authorized_keys
+ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
+adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+
+
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
 
@@ -50,31 +58,31 @@ Vagrant.configure(2) do |config|
    vb.customize ["modifyvm", :id, "--usb", "off" ]
 
    ###-------  Create/Attach additional drives section -------###
-   sata_disk = 'sata.vdi'
-   unless File.exist? (sata_disk)
-      vb.customize [ "createhd",
-        "--filename", sata_disk,
-        "--variant", "Fixed",
-        "--size", "1024"
-      ]
-    end
-      
-   # Define the controller
-   vb.customize ['storagectl', :id,
-    '--name', 'SATA Controller',
-    '--add', 'sata',
-    '--controller', 'IntelAhci',
-    '--portcount', 6
-   ]
-      
-   # Attach drive to the controller
-   vb.customize ["storageattach", :id, 
-    "--storagectl", "SATA Controller",
-    "--type", "hdd",
-    "--medium", sata_disk,
-    "--port", "1",
-    "--nonrotational", "on"
-   ]
+   #sata_disk = 'sata.vdi'
+   #unless File.exist? (sata_disk)
+   ##   vb.customize [ "createhd",
+   #     "--filename", sata_disk,
+   #     "--variant", "Fixed",
+   #     "--size", "1024"
+   #   ]
+   # end
+   #   
+   ## Define the controller
+   #vb.customize ['storagectl', :id,
+   # '--name', 'SATA Controller',
+   # '--add', 'sata',
+   # '--controller', 'IntelAhci',
+   # '--portcount', 6
+   #]
+   #   
+   ## Attach drive to the controller
+   #vb.customize ["storageattach", :id, 
+   # "--storagectl", "SATA Controller",
+   # "--type", "hdd",
+   # "--medium", sata_disk,
+   # "--port", "1",
+   # "--nonrotational", "on"
+   ##]
 
    ###-------  End: Create/Attach additional drives section -------###
 
@@ -86,15 +94,32 @@ Vagrant.configure(2) do |config|
     ### Run standard bash commands
     # Install some useful tools and update the system
     #yum update -y > /dev/null 2>&1
-    yum install -y net-tools traceroute ansible > /dev/null 2>&1 
+    yum install -y net-tools traceroute git ansible gcc make python > /dev/null 2>&1 
+     # Add the public key
+    mkdir /root/.ssh
+    chmod 700 /root/.ssh
+    touch /root/.ssh/authorized_keys
+    echo "Appending user@Laptop keys to root and vagrant authorized_keys"
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    echo "Appending AdminVM keys to root and vagrant authorized_keys"
+    echo #{adminvm_karlvkey} >> /home/vagrant/.ssh/authorized_keys
+    echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
+    echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
+    echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
 
-
-
+    ###  This is for later - 
+    # Copy /etc/hosts
+    #if [ -e /vagrant/files/hosts ]
+    #  then sudo cat /vagrant/files/hosts >> /etc/hosts
+    #elif [ -e /home/vagrant/sync/files/hosts ]
+    #  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
+    #fi     
     SHELL
   end ###--- End Provisioner
-
-
-
+  
+  # Setup nginx
+  config.vm.provision :shell, :path => "nginx/bootstrap.sh"
 
 
 end ###--- End configure(2) - this wraps up the wholething - like main()

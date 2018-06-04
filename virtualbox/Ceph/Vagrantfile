@@ -18,6 +18,10 @@ servers = YAML.load_file('servers.yml')
 
 # Define some variables
 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
+adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+
+# Not used right now
 ssh_user = "vagrant"
 ssh_pass = "vagrant"
 
@@ -92,12 +96,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ### and get a working /etc/hosts
       config.vm.provision "Setup shell environment", type: "shell" do |s|
         s.inline = <<-SHELL
+          # Install some tools
+          yum install -y net-tools traceroute git ansible gcc make python > /dev/null 2>&1 
           # Add the public key
           mkdir /root/.ssh
           chmod 700 /root/.ssh
           touch /root/.ssh/authorized_keys
+          echo "Appending user@Laptop keys to root and vagrant authorized_keys"
           echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
           echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+          echo "Appending AdminVM keys to root and vagrant authorized_keys"
+          echo #{adminvm_karlvkey} >> /home/vagrant/.ssh/authorized_keys
+          echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
+          echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
+          echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
+    
           # Copy /etc/hosts
           if [ -e /vagrant/files/hosts ]
             then sudo cat /vagrant/files/hosts >> /etc/hosts

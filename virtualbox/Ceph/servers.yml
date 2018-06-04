@@ -18,7 +18,7 @@
   ip3: 192.168.100.120
   port: 3820
 - name: osd01
-  box: centos/atomic-host
+  box: centos/7
   os: centos
   ram: 512
   cpus: 1
@@ -27,7 +27,7 @@
   ip3: 192.168.100.121
   port: 3821
 - name: osd02
-  box: centos/atomic-host
+  box: centos/7
   os: centos
   ram: 512
   cpus: 1
@@ -36,7 +36,7 @@
   ip3: 192.168.100.122
   port: 3822
 - name: osd03
-  box: centos/atomic-host
+  box: centos/7
   os: centos
   ram: 512
   cpus: 1
@@ -45,7 +45,7 @@
   ip3: 192.168.100.123
   port: 3823
 - name: mon01
-  box: centos/atomic-host
+  box: centos/7
   os: centos
   ram: 512
   cpus: 1
@@ -54,7 +54,7 @@
   ip3: 192.168.100.124
   port: 3824
 - name: mon02
-  box: centos/atomic-host
+  box: centos/7
   os: centos
   ram: 512
   cpus: 1

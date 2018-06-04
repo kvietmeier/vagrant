@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.cpus = servers["cpus"]
         
         # Create drive/s 
-        unless File.exist?("#{servers["name"]}OSD-01.vdi")
+        unless File.exist?("#{servers["name"]}disk-01.vdi")
          vb.customize ['createhd', '--filename', "#{servers["name"]}OSD-01.vdi", '--size', 1024]
         end  # End create disk
         
