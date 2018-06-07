@@ -6,6 +6,8 @@ Working on building multi-server and multi-disk environments as baselines for in
       ├───AtomicCentos
       ├───centos
       ├───Ceph
+            |
+            6 VMs - Admin, osd01-3, mon01-2
       ├───ClearLinux
       ├───devops
       ├───devstack
