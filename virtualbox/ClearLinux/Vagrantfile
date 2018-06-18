@@ -12,7 +12,11 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 
 
 Vagrant.configure(2) do |config|
+  #config.vm.box = "ClearLinux-23090.box"
   config.vm.box = "AntonioMeireles/ClearLinux"
+  #config.vm.box_version = "21570"
+  #config.vm.box_version = "22880"
+  config.vm.box_version = "23090"
   config.vm.hostname = "clearlinux"
 
   config.vm.usable_port_range= 2800..2900
@@ -31,33 +35,33 @@ Vagrant.configure(2) do |config|
   end # end Provider
 
 
-  config.vm.provision "Setup shell environment", type: "shell" do |s|
-    s.inline = <<-SHELL
+#  config.vm.provision "Setup shell environment", type: "shell" do |s|
+#    s.inline = <<-SHELL
 
-    # Update (disabled - takes too long)
-    #swupd update
-
-    # Add the public keys "adminvm" is a VM I use for testing things like Ansible
-    # Clearlinux box doesn't havre a vagrant user - the user is "clear"
-    mkdir /root/.ssh
-    chmod 700 /root/.ssh
-    touch /root/.ssh/authorized_keys
+ #   # Update (disabled - takes too long)
+  #  #swupd update
+#
+#    # Add the public keys "adminvm" is a VM I use for testing things like Ansible
+ #   # Clearlinux box doesn't havre a vagrant user - the user is "clear"
+  #  mkdir /root/.ssh
+   # chmod 700 /root/.ssh
+    #touch /root/.ssh/authorized_keys
+   # 
+   # echo "Appending user@Laptop keys to root and vagrant authorized_keys"
+   # echo #{ssh_pub_key} >> /home/clear/.ssh/authorized_keys
+   # echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
     
-    echo "Appending user@Laptop keys to root and vagrant authorized_keys"
-    echo #{ssh_pub_key} >> /home/clear/.ssh/authorized_keys
-    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
-    
-    echo "Appending AdminVM keys to root and vagrant authorized_keys"
-    echo #{adminvm_karlvkey} >> /home/clear/.ssh/authorized_keys
-    echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
-    echo #{adminvm_rootkey} >> /home/clear/.ssh/authorized_keys
-    echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
-
-    SHELL
-  end ###--- End Provisioner
+   # echo "Appending AdminVM keys to root and vagrant authorized_keys"
+   # echo #{adminvm_karlvkey} >> /home/clear/.ssh/authorized_keys
+   # echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
+   # echo #{adminvm_rootkey} >> /home/clear/.ssh/authorized_keys
+   # echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
+#
+#    SHELL
+#  end ###--- End Provisioner
 
   # Demonstrate using an external shell script - this one sets up nginx
-  config.vm.provision :shell, :path => "setup/bootstrap.sh"
-  config.vm.provision :shell, :path => "setup/apache.sh"
+#  config.vm.provision :shell, :path => "setup/bootstrap.sh"
+#  config.vm.provision :shell, :path => "setup/apache.sh"
 
 end # end configure(2)

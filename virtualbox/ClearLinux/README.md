@@ -1,5 +1,12 @@
 ## Intel Clear Linux testing platform
 
+You will need the Clear Linux Vagrant plugin:
+````shell
+vagrant plugin install vagrant-guests-clearlinux
+````
+
+NOTE:  It is very important to check for plugin updates after you updaste the box version.
+
 Config the Clear Linux box and set hostname
 ````ruby
 Vagrant.configure(2) do |config|
