@@ -5,7 +5,7 @@ You will need the Clear Linux Vagrant plugin:
 vagrant plugin install vagrant-guests-clearlinux
 ````
 
-NOTE:  It is very important to check for plugin updates after you updaste the box version.
+NOTE:  It is very important to check for plugin updates after you update the box version.
 
 Config the Clear Linux box and set hostname
 ````ruby
