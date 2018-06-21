@@ -74,7 +74,7 @@ Network interface configuration
 ~~~
 
 Provider:  Virtualbox specific configuration
-~~~
+~~~~
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -96,7 +96,7 @@ Provider:  Virtualbox specific configuration
    vb.customize ["modifyvm", :id, "--usb", "off" ]
 
   end ###--- End Provider
-~~~
+~~~~
 
 Provisioner:  Using shell provisioner
 ~~~
