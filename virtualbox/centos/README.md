@@ -19,18 +19,19 @@ Configuration Tasks:
 ***Vagrantfile***
 
 Header with comments - Vagrantfile is using Ruby:
-~~~
+```ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 # Created By: Karl Vietmeier
 # Basic Vagrantfile for a single VM with comments
-~~~
+```
 
-Setting variablew local to Vagrantfile
+Setting variable local to Vagrantfile
 ~~~
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
 # We use it later in the shell provisioner to populate authorized_keys
+
 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
 adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
