@@ -16,7 +16,7 @@ Configuration Tasks:
 * Basic Shell provisioner
 
 ---
-**Vagrantfile**
+**Vagrantfile Walkthrough**
 ---
 
 
@@ -29,7 +29,8 @@ Configuration Tasks:
 ```
 
 
-**Setting variable local to Vagrantfile**
+**Setting variables local to Vagrantfile**
+Using standard scripting best praqxtices it is a good idea to define varibles up front.
 ```ruby
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
@@ -42,6 +43,7 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 
 
 **Start VM configuration**
+Define the box to use and a hostname for the Hypervisor.
 ```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -51,6 +53,7 @@ Vagrant.configure(2) do |config|
 
 
 **Network: Interface Configuration**
+In this section you define private networks and setup port forwarding.
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -72,12 +75,11 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 2899
   config.vm.network "forwarded_port", guest: 8080, host: 2900
 
-  # Need to test this one more
-  #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
 ```
 
 
 **Provider:  Virtualbox specific configuration**
+We define the Provider specific options - in this case VirtualBox.  
 ```ruby
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
@@ -104,6 +106,9 @@ Vagrant.configure(2) do |config|
 
 
 **Provisioner: Using shell provisioner**
+A basic box isn't terribly useful.  Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing.
+We also a bad thing - disable SElinux.
+ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
   ### This example is using the Shell provisioner
