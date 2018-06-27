@@ -15,8 +15,9 @@ Configuration Tasks:
 * Add additional disks
 * Basic Shell provisioner
 
-
-***Vagrantfile***
+---
+**Vagrantfile**
+---
 
 Header with comments - Vagrantfile is using Ruby:
 ```ruby
