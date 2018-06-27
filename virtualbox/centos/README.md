@@ -7,13 +7,14 @@ Configuration Tasks:
 * Create private networks and interfaces
 * Port forwarding
 * Set the VM names:
-    * hostname
+    * Hostname in guest OS
     * Name in Virtualbox
+    * Name for Vagrant
 * Configfure VM
     * Memory/CPU
     * HW devices (audio/USB)
-* Add additional disks
-* Basic Shell provisioner
+* Add additional disks (TBD)
+* Shell provisioner
 
 ---
 **Vagrantfile Walkthrough**
