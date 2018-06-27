@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 # nginx install
-sudo yum install epel-release -y
 sudo yum install nginx -y
 sudo systemctl start nginx
+sudo systemctl enable nginx
 
 # setup firewall
-#sudo firewall-cmd --permanent --zone=public --add-service=http 
-#sudo firewall-cmd --permanent --zone=public --add-service=https
-#sudo firewall-cmd --reload
+sudo firewall-cmd --permanent --zone=public --add-service=http 
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
 
 # clean /var/www
 sudo rm -Rf /var/www

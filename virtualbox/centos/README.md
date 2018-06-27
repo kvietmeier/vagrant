@@ -43,12 +43,16 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 
 
 **Start VM configuration**
-Define the box to use and a hostname for the Hypervisor.
+Define the box to use and VM names for Vagrant stdout and the guest OS.
 ```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
+
   # Set the VM OS level Hostname
   config.vm.hostname = "centos"
+
+  # Set the Vagrant vm name for stdout while starting VM also the entry under machines in the .vagrant directory
+  config.vm.define "centos"
 ```
 
 
