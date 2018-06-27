@@ -16,10 +16,10 @@ Configuration Tasks:
 * Basic Shell provisioner
 
 ---
-**Vagrantfile**
----
+*Vagrantfile*
 
-Header with comments - Vagrantfile is using Ruby:
+
+*Header with comments - Vagrantfile is using Ruby:*
 ```ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
