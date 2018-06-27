@@ -16,10 +16,10 @@ Configuration Tasks:
 * Basic Shell provisioner
 
 ---
-*Vagrantfile*
+#Vagrantfile
+---
 
-
-*Header with comments - Vagrantfile is using Ruby:*
+**Header with comments - Vagrantfile is using Ruby:**
 ```ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
@@ -28,7 +28,7 @@ Configuration Tasks:
 ```
 
 
-Setting variable local to Vagrantfile
+**Setting variable local to Vagrantfile**
 ```ruby
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
