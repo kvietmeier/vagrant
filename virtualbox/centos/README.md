@@ -16,7 +16,7 @@ Configuration Tasks:
 * Basic Shell provisioner
 
 ---
-#Vagrantfile
+Vagrantfile
 ---
 
 **Header with comments - Vagrantfile is using Ruby:**
