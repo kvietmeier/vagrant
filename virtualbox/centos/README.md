@@ -45,8 +45,9 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = "centos"
 ```
 
+
 Network interface configuration
-~~~
+```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
   # If you don't create a private network the default NAT network of the provider will be used.
@@ -69,10 +70,10 @@ Network interface configuration
 
   # Need to test this one more
   #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
-~~~
+```
 
 Provider:  Virtualbox specific configuration
-~~~~
+```ruby
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -94,10 +95,10 @@ Provider:  Virtualbox specific configuration
    vb.customize ["modifyvm", :id, "--usb", "off" ]
 
   end ###--- End Provider
-~~~~
+```
 
 Provisioner:  Using shell provisioner
-~~~
+```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
   ### This example is using the Shell provisioner
   config.vm.provision "Setup shell environment", type: "shell" do |s|
@@ -137,16 +138,16 @@ Provisioner:  Using shell provisioner
     #fi     
     SHELL
   end ###--- End Provisioner
-~~~
+```
 
 Call a seperate shell script   
-~~~
+```ruby
   # Demonstrate using an external shell script - this one sets up nginx
   #config.vm.provision :shell, :path => "nginx/setupnginx.sh"
   config.vm.provision :shell, :path => "config/bootstrap.sh"
-~~~
+```
 
 Close out "configure(2)"
-~~~
+```ruby
 end ###--- End configure(2) - this wraps up the wholething - like main()
-~~~
+```
