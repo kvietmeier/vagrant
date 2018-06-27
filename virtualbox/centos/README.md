@@ -50,7 +50,7 @@ Vagrant.configure(2) do |config|
 ```
 
 
-Network: Interface Configuration
+**Network: Interface Configuration**
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -77,7 +77,7 @@ Network: Interface Configuration
 ```
 
 
-Provider:  Virtualbox specific configuration
+**Provider:  Virtualbox specific configuration**
 ```ruby
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
@@ -103,7 +103,7 @@ Provider:  Virtualbox specific configuration
 ```
 
 
-Provisioner: Using shell provisioner
+**Provisioner: Using shell provisioner**
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
   ### This example is using the Shell provisioner
@@ -147,7 +147,7 @@ Provisioner: Using shell provisioner
 ```
 
 
-Provisioner: Call seperate shell scripts   
+**Provisioner: Call seperate shell scripts**   
 ```ruby
   # Demonstrate using an external shell script - this one sets up nginx
   config.vm.provision :shell, :path => "nginx/setupnginx.sh"
@@ -155,7 +155,7 @@ Provisioner: Call seperate shell scripts
 ```
 
 
-Close out "configure(2)"
+**Close out "configure(2)"**
 ```ruby
 end ###--- End configure(2) - this wraps up the wholething - like main()
 ```
