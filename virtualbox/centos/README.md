@@ -17,6 +17,7 @@ Configuration Tasks:
 
 ---
 **Vagrantfile**
+---
 
 
 **Header with comments - Vagrantfile is using Ruby:**
