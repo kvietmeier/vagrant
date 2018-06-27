@@ -27,7 +27,7 @@ Header with comments - Vagrantfile is using Ruby:
 ```
 
 Setting variable local to Vagrantfile
-~~~
+```ruby
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
 # We use it later in the shell provisioner to populate authorized_keys
@@ -35,18 +35,15 @@ Setting variable local to Vagrantfile
 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
 adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
-~~~
-
+```
 
 Start VM configuration
-~~~
+```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
-
-~~~
   # Set the VM OS level Hostname
   config.vm.hostname = "centos"
-~~~
+```
 
 Network interface configuration
 ~~~
