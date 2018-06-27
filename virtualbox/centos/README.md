@@ -26,6 +26,7 @@ Header with comments - Vagrantfile is using Ruby:
 # Basic Vagrantfile for a single VM with comments
 ```
 
+
 Setting variable local to Vagrantfile
 ```ruby
 ### Set some variables
@@ -37,7 +38,8 @@ adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
 ```
 
-Start VM configuration
+
+**Start VM configuration**
 ```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -46,7 +48,7 @@ Vagrant.configure(2) do |config|
 ```
 
 
-Network interface configuration
+Network: Interface Configuration
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -71,6 +73,7 @@ Network interface configuration
   # Need to test this one more
   #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
 ```
+
 
 Provider:  Virtualbox specific configuration
 ```ruby
@@ -97,7 +100,8 @@ Provider:  Virtualbox specific configuration
   end ###--- End Provider
 ```
 
-Provisioner:  Using shell provisioner
+
+Provisioner: Using shell provisioner
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
   ### This example is using the Shell provisioner
@@ -140,12 +144,14 @@ Provisioner:  Using shell provisioner
   end ###--- End Provisioner
 ```
 
-Call a seperate shell script   
+
+Provisioner: Call seperate shell scripts   
 ```ruby
   # Demonstrate using an external shell script - this one sets up nginx
-  #config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
   config.vm.provision :shell, :path => "config/bootstrap.sh"
 ```
+
 
 Close out "configure(2)"
 ```ruby
