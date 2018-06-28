@@ -3,7 +3,7 @@
 # Basic system setup
 #  Could move most of the inline shell provisioner in here but leaving it in the main Vagrantfile
 #  as an example.
-# NOTE - using redirect to /dev/null with yum to limit output so you weon't see any errors
+# NOTE - using redirect to /dev/null with yum to limit output so you won't see any errors
 
 
 echo ""
@@ -25,7 +25,20 @@ echo "###--- Install any extra packages"
 yum install -y openssh-server > /dev/null 2>&1
 yum install -y yum-plugin-priorities > /dev/null 2>&1
 
-###--- Create ceph-deploy user - we will could the vagrant user that already exists
+###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
+# NOTE - may want to customize the users shell
+useradd -d /home/cephuser -m cephuser 
+passwd -d cephuser
+echo "ceph123" | passwd cephuser --stdin
+echo "cephuser ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/cephuser
+sudo chmod 0440 /etc/sudoers.d/cephuser
+
+# - add section to copy in SSH keys
+mkdir /cephuser/.ssh
+chown cephuser:cephuser /cephuser/.ssh
+chmod 700 /cephuser/.ssh
+touch /cephuser/.ssh/authorized_keys
+
 
 ###--- Firewall check to see if it is running if it is - configure it
 echo "###--- Configure the firewall"
@@ -68,4 +81,3 @@ systemctl start ntpd
 systemctl enable ntpd
 systemctl status ntpd
 ###--- End NTP
-
