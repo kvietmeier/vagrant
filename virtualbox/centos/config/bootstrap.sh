@@ -27,6 +27,7 @@ yum install -y yum-plugin-priorities > /dev/null 2>&1
 
 ###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
 # NOTE - may want to customize the users shell
+echo "###--- Adding a User"
 useradd -d /home/cephuser -m cephuser 
 passwd -d cephuser
 echo "ceph123" | passwd cephuser --stdin
