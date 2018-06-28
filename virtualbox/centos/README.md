@@ -157,11 +157,34 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```
 
 
+**Provisioner: Reboot during setup**
+Sometimes you need to reboot after doing something but befiore you are completely done 
+```ruby
+  ### Example of a Reboot in the middle of provisioning
+  # Requires vagrant-reload plugin
+  # https://github.com/aidanns/vagrant-reload/blob/master/README.md
+
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "Do something requiring reboot"  
+    echo $(date) > ~/reboottime
+  SHELL
+
+  # Trigger reload using plugin
+  config.vm.provision :reload
+
+  # Do something after the reload
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "I just rebooted - continuing"
+    echo $(date) >> ~/reboottime
+  SHELL
+```
+
 **Provisioner: Call seperate shell scripts**   
 ```ruby
-  # Demonstrate using an external shell script - this one sets up nginx
-  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+  # Demonstrate using external shell scripts for post bringup configuration
   config.vm.provision :shell, :path => "config/bootstrap.sh"
+  config.vm.provision :shell, :path => "docker/setupdocker.sh"
+  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
 ```
 
 
