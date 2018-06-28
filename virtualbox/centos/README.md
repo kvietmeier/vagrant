@@ -83,7 +83,7 @@ In this section you define private networks and setup port forwarding.
 ```
 
 
-**Provider:  Virtualbox specific configuration**
+**Provider:  Virtualbox specific configuration**<br/>
 We define the Provider specific options - in this case VirtualBox.  This includes adding an additional disk.
 ```ruby
   ###------- Provider specific VM definition and creation begins here
@@ -127,9 +127,10 @@ We define the Provider specific options - in this case VirtualBox.  This include
 **End Provider**
 
 
-**Provisioner: Using shell provisioner**
-A basic box isn't terribly useful.  Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing.
-We also a bad thing - disable SElinux.
+**Provisioner: Using shell provisioner**<br/>
+A basic box isn't terribly useful. <br/>
+Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing.
+We also do a bad thing - disable SElinux. <br/>
 ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
