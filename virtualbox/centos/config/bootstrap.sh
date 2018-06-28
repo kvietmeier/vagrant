@@ -35,10 +35,10 @@ echo "cephuser ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/cephuser
 sudo chmod 0440 /etc/sudoers.d/cephuser
 
 # - add section to copy in SSH keys
-mkdir /cephuser/.ssh
-chown cephuser:cephuser /cephuser/.ssh
-chmod 700 /cephuser/.ssh
-touch /cephuser/.ssh/authorized_keys
+mkdir /home/cephuser/.ssh
+chown cephuser:cephuser /home/cephuser/.ssh
+chmod 700 /home/cephuser/.ssh
+touch /home/cephuser/.ssh/authorized_keys
 
 
 ###--- Firewall check to see if it is running if it is - configure it

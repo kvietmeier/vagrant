@@ -43,7 +43,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
 
       #????
-      #srv.vm.network "private_network", ip: servers["ip3"]  
       #srv.ssh.username = servers["ssh_user"]
       #srv.ssh.password = servers["ssh_pass"]
 
