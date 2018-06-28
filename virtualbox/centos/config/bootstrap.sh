@@ -20,6 +20,10 @@ elif [ -e /home/vagrant/sync/files/hosts ]
 fi     
 
 ### ----  For Ceph bootstrap  ---- ###
+#awk '/^# Defaults/ && !f {$0=$0 RS "Defaults:cephuser !requiretty";f=1}1' /etc/sudoers
+#sed '/^# Defaults/{s/.*/&\Defaults:cephuser !requiretty/;:a;n;ba}' /etc/sudoers
+#sed '/^# Defaults/{s/.*/$/\'$'\n''Defaults:cephuser !requiretty/;}' /etc/sudoers
+
 # Install any extra packages
 echo "###--- Install any extra packages"
 yum install -y openssh-server > /dev/null 2>&1
@@ -29,9 +33,14 @@ yum install -y yum-plugin-priorities > /dev/null 2>&1
 # NOTE - may want to customize the users shell
 echo "###--- Adding a User"
 useradd -d /home/cephuser -m cephuser 
+chown cephuser:cephuser /home/cephuser/
 passwd -d cephuser
 echo "ceph123" | passwd cephuser --stdin
-echo "cephuser ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/cephuser
+
+# Set some sudoers parameters in /etc/sudoers.d/cephuser
+echo "Adding  Defaults:cephuser !requiretty to /etc/sudoers.d/cephuser"
+echo "cephuser ALL = (root) NOPASSWD:ALL" > /etc/sudoers.d/cephuser
+echo "Defaults:cephuser !requiretty" >> /etc/sudoers
 sudo chmod 0440 /etc/sudoers.d/cephuser
 
 # - add section to copy in SSH keys
@@ -80,7 +89,7 @@ sed -i '/pool.*/s/\(^s.*\)/'$'/' /etc/ntp.conf
 # Start ntpd services
 systemctl start ntpd
 systemctl enable ntpd
-if $(systemctl is-active --quite ntpd)
+if $(systemctl is-active --quiet ntpd)
    then
     echo "NTP is running"
 fi
