@@ -47,21 +47,33 @@ Vagrant.configure(2) do |config|
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider "virtualbox" do |vb|
-   
-  # Set the name in Virtualbox (GUI and CLI)
-   vb.name = "centos"
 
-   # Confifgure the amount of memory and number of CPUs for the VM:
-   vb.memory = "1024"
-   vb.cpus = "1"
+    # Set the name in Virtualbox (GUI and CLI)
+    vb.name = "centos"
 
-   ###-------  Configure low level system parameters
-   # - get rid of extra stuff
-   # - need "ioapic on" when adding extra drives
-   # - use "vb.customize" when modifying parameters that don't have predefined aliases like "vb.cpu"
-   vb.customize ["modifyvm", :id, "--ioapic", "on" ]
-   vb.customize ["modifyvm", :id, "--audio", "none" ]
-   vb.customize ["modifyvm", :id, "--usb", "off" ]
+    # Configure the amount of memory and number of CPUs for the VM:
+    vb.memory = "1024"
+    vb.cpus = "1"
+
+    ###-------  Configure low level system parameters
+    # - get rid of extra stuff
+    # - need "ioapic on" when adding extra drives
+    # - use "vb.customize" when modifying parameters that don't have predefined aliases like "vb.cpu"
+    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
+    vb.customize ["modifyvm", :id, "--audio", "none" ]
+    vb.customize ["modifyvm", :id, "--usb", "off" ]
+
+    ###------- Add an additional disk
+    # Add SATA controller - you can only have one
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+
+    # Create OSD drive/s 
+    unless File.exist?("Disk-01.vdi")
+      vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
+    end  # End create disk
+
+    # Attach the drive to the controller
+    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
 
   end ###--- End Provider
 
@@ -72,8 +84,8 @@ Vagrant.configure(2) do |config|
     ### Run standard bash commands using an "inline" script
     
     # Install some useful tools and update the system
-    yum install -y net-tools screen tree traceroute git ansible gcc make python policycoreutils-python > /dev/null 2>&1 
     yum install -y epel-release > /dev/null 2>&1
+    yum install -y net-tools wget screen tree traceroute git gcc make python policycoreutils-python > /dev/null 2>&1 
 
     # Commented out until actually needed - takes too long
     #yum update -y > /dev/null 2>&1

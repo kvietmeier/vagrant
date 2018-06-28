@@ -84,7 +84,7 @@ In this section you define private networks and setup port forwarding.
 
 
 **Provider:  Virtualbox specific configuration**
-We define the Provider specific options - in this case VirtualBox.  
+We define the Provider specific options - in this case VirtualBox.  This includes adding an additional disk.
 ```ruby
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
@@ -105,6 +105,18 @@ We define the Provider specific options - in this case VirtualBox.
    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
    vb.customize ["modifyvm", :id, "--audio", "none" ]
    vb.customize ["modifyvm", :id, "--usb", "off" ]
+
+    ###------- Add an additional disk
+    # Add SATA controller - you can only have one
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+
+    # Create OSD drive/s 
+    unless File.exist?("Disk-01.vdi")
+      vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
+    end  # End create disk
+
+    # Attach the drive to the controller
+    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
 
   end ###--- End Provider
 ```
