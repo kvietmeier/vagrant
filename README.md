@@ -1,10 +1,10 @@
 ## Vagrant Projects
 
-I am working on setting up Vagrant for Windows 10 and experimenting with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV for now, there are just too many bugs and challenges with networking and mounting shared folders.  I really wanted to use HyperV since it is required if you want to install and use Docker4Windows and I wanted to use a completely Microsoft/Windows toolset.  But both D4W and HyperV are still WIP.
+I am working on setting up Vagrant for Windows 10 and experimenting with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV for now, there are just too many bugs and challenges with networking and mounting shared folders.  I really wanted to use HyperV since it is required if you want to install and use Docker4Windows, and I wanted to use a completely Microsoft/Windows toolset.  But - both D4W and HyperV are still WIP.
 
 VMware Workstation is TBD
 
-NOTE - All of these examples assume Windows 10 "Holiday Edition" and PowerShell.   
+**NOTE - All of these examples are built/run using Windows 10 "Holiday Edition" and PowerShell.**
 
 ## Getting Started
 
@@ -13,22 +13,17 @@ You need these:
 * [VirtualBox] (https://www.virtualbox.org/wiki/Downloads) - No explanation needed
 
 
-### Prerequisites
+## Prerequisites
 
 There are many tutorials out there on getting Virtualbox and Vagrant installed so I won't try to replicate them here but there are some things I highly recommend you setup and configure on your laptop.
 
 * [ConEmu](https://conemu.github.io/) - Windows terminal replacement can be configured to give "iterm like" functionality
-* [WSL](https://msdn.microsoft.com/en-us/commandline/wsl/about) - Windows Subsystem for Linux
 * [Visual Studio Code](https://code.visualstudio.com/) - Free and lightweight version of Visual Studio
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Authors
+### Author
 
 * **Karl Vietmeier** 
 
-## Acknowledgments
+### Acknowledgments
 
 * All of my colleagues at Intel who have been willing test subjects
