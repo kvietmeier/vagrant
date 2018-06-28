@@ -65,7 +65,8 @@ Vagrant.configure(2) do |config|
 
     ###------- Add an additional disk
     # Add SATA controller - you can only have one
-    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+    #vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+    vb.customize ['storagectl', :id, '--name',  'NVME Controller', '--add', 'pcie',  '--controller', 'NVMe', '--portcount', 6]
 
     # Create OSD drive/s 
     unless File.exist?("Disk-01.vdi")
@@ -73,7 +74,8 @@ Vagrant.configure(2) do |config|
     end  # End create disk
 
     # Attach the drive to the controller
-    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+    #vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+    vb.customize [ 'storageattach', :id, '--storagectl', 'NVME Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--nonrotational', 'on', '--medium', "./Disk-01.vdi"]
 
   end ###--- End Provider
 
@@ -85,7 +87,7 @@ Vagrant.configure(2) do |config|
     
     # Install some useful tools and update the system
     yum install -y epel-release > /dev/null 2>&1
-    yum install -y net-tools wget screen tree traceroute git gcc make python policycoreutils-python > /dev/null 2>&1 
+    yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python > /dev/null 2>&1 
 
     # Commented out until actually needed - takes too long
     #yum update -y > /dev/null 2>&1

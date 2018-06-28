@@ -58,7 +58,9 @@ Vagrant.configure(2) do |config|
 
 
 **Network: Interface Configuration**<br/>
-In this section you define private networks and setup port forwarding.
+In this section you define private networks and setup port forwarding.<br/>
+If we install/configure nginx we will need ports 80 and 8080 forwarded.<br/>   
+I am using 2250 for SSH bwecause I have a few Vagrant environments and I want to avoid conflicts
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -71,7 +73,9 @@ In this section you define private networks and setup port forwarding.
   config.vm.usable_port_range= 2800..2900
 
   # Create 2 interfaces on 2 host-only networks
+  # eth1
   config.vm.network "private_network", ip: "172.16.0.200"
+  # eth2
   config.vm.network "private_network", ip: "172.10.0.200"
 
   # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
