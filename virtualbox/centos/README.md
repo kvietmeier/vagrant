@@ -30,7 +30,7 @@ Configuration Tasks:
 ```
 
 
-**Setting variables local to Vagrantfile**
+**Setting variables local to Vagrantfile**<br/>
 Using standard scripting best praqxtices it is a good idea to define varibles up front.
 ```ruby
 ### Set some variables
@@ -43,7 +43,7 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 ```
 
 
-**Start VM configuration**
+**Start VM configuration**<br/>
 Define the box to use and VM names for Vagrant stdout and the guest OS.
 ```ruby
 Vagrant.configure(2) do |config|
@@ -57,7 +57,7 @@ Vagrant.configure(2) do |config|
 ```
 
 
-**Network: Interface Configuration**
+**Network: Interface Configuration**<br/>
 In this section you define private networks and setup port forwarding.
 ```ruby
   ###------- Network setup section - not Provider specific
@@ -107,7 +107,11 @@ We define the Provider specific options - in this case VirtualBox.  This include
    vb.customize ["modifyvm", :id, "--usb", "off" ]
 ```
 
-**Add an additional Disk**
+**Add an additional Disk**<br/>
+3 Steps
+1. Create/add the SATA controller to the Guest
+2. Create the disk file - good practice to see if it already exists
+3. Attach the disk to a port on the controller - the name is important
 ```ruby
 
     ###------- Add an additional disk
@@ -128,8 +132,7 @@ We define the Provider specific options - in this case VirtualBox.  This include
 
 
 **Provisioner: Using shell provisioner**<br/>
-A basic box isn't terribly useful. <br/>
-Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing.
+A basic box isn't terribly useful. Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing. <br/>
 We also do a bad thing - disable SElinux. <br/>
 ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```ruby
@@ -175,7 +178,7 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```
 
 
-**Provisioner: Reboot during setup**
+**Provisioner: Reboot during setup**<br/>
 Sometimes you need to reboot after doing something but befiore you are completely done 
 ```ruby
   ### Example of a Reboot in the middle of provisioning
@@ -197,7 +200,8 @@ Sometimes you need to reboot after doing something but befiore you are completel
   SHELL
 ```
 
-**Provisioner: Call seperate shell scripts**   
+**Provisioner: Call seperate shell scripts**<br/>   
+Usefull to breakup tasks and make it easy to switch between use cases
 ```ruby
   # Demonstrate using external shell scripts for post bringup configuration
   config.vm.provision :shell, :path => "config/bootstrap.sh"
