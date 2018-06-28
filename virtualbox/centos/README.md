@@ -17,7 +17,7 @@ Configuration Tasks:
 * Shell provisioner
 
 ---
-**Vagrantfile Walkthrough**
+###Vagrantfile Walkthrough
 ---
 
 
