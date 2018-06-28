@@ -105,6 +105,10 @@ We define the Provider specific options - in this case VirtualBox.  This include
    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
    vb.customize ["modifyvm", :id, "--audio", "none" ]
    vb.customize ["modifyvm", :id, "--usb", "off" ]
+```
+
+**Add an additional Disk**
+```ruby
 
     ###------- Add an additional disk
     # Add SATA controller - you can only have one
@@ -120,6 +124,7 @@ We define the Provider specific options - in this case VirtualBox.  This include
 
   end ###--- End Provider
 ```
+**End Provider**
 
 
 **Provisioner: Using shell provisioner**
