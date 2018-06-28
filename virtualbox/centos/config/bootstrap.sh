@@ -80,5 +80,9 @@ sed -i '/pool.*/s/\(^s.*\)/'$'/' /etc/ntp.conf
 # Start ntpd services
 systemctl start ntpd
 systemctl enable ntpd
-systemctl status ntpd
+if $(systemctl is-active --quite ntpd)
+   then
+    echo "NTP is running"
+fi
+
 ###--- End NTP
