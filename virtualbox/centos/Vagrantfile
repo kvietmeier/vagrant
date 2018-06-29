@@ -85,9 +85,6 @@ Vagrant.configure(2) do |config|
     s.inline = <<-SHELL
     ### Run standard bash commands using an "inline" script
     
-    # Install some useful tools and update the system
-    yum install -y epel-release > /dev/null 2>&1
-    yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python > /dev/null 2>&1 
 
     # Commented out until actually needed - takes too long
     #yum update -y > /dev/null 2>&1
@@ -114,6 +111,10 @@ Vagrant.configure(2) do |config|
     SHELL
   end ###--- End Provisioner
   
+
+  # Use the "file" provisioner to copy in the global hosts file
+  config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+
   ### Example of a Reboot in the middle of provisioning
   # Requires vagrant-reload plugin
   # https://github.com/aidanns/vagrant-reload/blob/master/README.md
@@ -134,7 +135,7 @@ Vagrant.configure(2) do |config|
 
   ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
   # Scripts are located under the the top level Vagrant folder I use so I can share them
-  config.vm.provision :shell, :path => "../../scripts/bash/iconfig/bootstrap.sh"
+  config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
 #  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
 #  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
 

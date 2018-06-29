@@ -16,6 +16,7 @@ Configuration Tasks:
 * Add additional disks (TBD)
 * Shell provisioner
 
+<HR>
 ---
 Vagrantfile Walkthrough
 ---

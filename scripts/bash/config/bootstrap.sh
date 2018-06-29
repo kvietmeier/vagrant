@@ -12,22 +12,33 @@ echo ""
 
 ###  - 
 # Copy /etc/hosts
+#echo "###--- Copy /etc/hosts"
+#if [ -e /vagrant/config/hosts ]
+#  then sudo cat /vagrant/config/hosts >> /etc/hosts
+#elif [ -e /home/vagrant/sync/files/hosts ]
+#  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
+#fi     
 echo "###--- Copy /etc/hosts"
-if [ -e /vagrant/config/hosts ]
-  then sudo cat /vagrant/config/hosts >> /etc/hosts
-elif [ -e /home/vagrant/sync/files/hosts ]
-  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
+if [ -e ~/hosts ]
+  then sudo cat ~/hosts >> /etc/hosts
 fi     
+
+
 
 ### ----  For Ceph bootstrap  ---- ###
 #awk '/^# Defaults/ && !f {$0=$0 RS "Defaults:cephuser !requiretty";f=1}1' /etc/sudoers
 #sed '/^# Defaults/{s/.*/&\Defaults:cephuser !requiretty/;:a;n;ba}' /etc/sudoers
 #sed '/^# Defaults/{s/.*/$/\'$'\n''Defaults:cephuser !requiretty/;}' /etc/sudoers
 
-# Install any extra packages
-echo "###--- Install any extra packages"
+###--- Install any extra packages
+# Install some useful tools and update the system
+echo "###--- Install some useful utilities"
+yum install -y epel-release > /dev/null 2>&1
+yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
+echo "###--- Install extra packages for Ceph"
 yum install -y openssh-server > /dev/null 2>&1
 yum install -y yum-plugin-priorities > /dev/null 2>&1
+
 
 ###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
 # NOTE - may want to customize the users shell
