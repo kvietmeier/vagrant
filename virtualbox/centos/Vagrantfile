@@ -133,9 +133,10 @@ Vagrant.configure(2) do |config|
   SHELL
 
   ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
-  config.vm.provision :shell, :path => "config/bootstrap.sh"
+  # Scripts are located under the the top level Vagrant folder I use so I can share them
+  config.vm.provision :shell, :path => "../../scripts/bash/iconfig/bootstrap.sh"
 #  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
-#  config.vm.provision :shell, :path => "docker/setupdocker.sh"
+#  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
 
 
 end ###--- End configure(2) - this wraps up the wholething - like main()

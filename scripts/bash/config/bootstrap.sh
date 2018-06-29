@@ -92,9 +92,6 @@ systemctl enable ntpd
 if $(systemctl is-active --quiet ntpd)
    then
     echo "NTP is running"
-   else
-    systemctl start ntpd
-    echo "Starting ntpd"
 fi
 
 ###--- End NTP
