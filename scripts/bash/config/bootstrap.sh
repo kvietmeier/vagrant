@@ -4,6 +4,7 @@
 #  Could move most of the inline shell provisioner in here but leaving it in the main Vagrantfile
 #  as an example.
 # NOTE - using redirect to /dev/null with yum to limit output so you won't see any errors
+# Script runs as root in the guest
 
 
 echo ""
@@ -19,11 +20,11 @@ echo ""
 #  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
 #fi     
 echo "###--- Copy /etc/hosts"
-if [ -e ~/hosts ]
-  then sudo cat ~/hosts >> /etc/hosts
+if [ -e /home/vagrant/hosts ]
+  then 
+    sed -i -e 's/\r//g' /home/vagrant/hosts
+    cat /home/vagrant/hosts | sudo tee -a /etc/hosts > /dev/null 2>&1
 fi     
-
-
 
 ### ----  For Ceph bootstrap  ---- ###
 #awk '/^# Defaults/ && !f {$0=$0 RS "Defaults:cephuser !requiretty";f=1}1' /etc/sudoers
@@ -38,7 +39,6 @@ yum install -y net-tools pciutils wget screen tree traceroute git gcc make pytho
 echo "###--- Install extra packages for Ceph"
 yum install -y openssh-server > /dev/null 2>&1
 yum install -y yum-plugin-priorities > /dev/null 2>&1
-
 
 ###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
 # NOTE - may want to customize the users shell
@@ -61,7 +61,7 @@ chmod 700 /home/cephuser/.ssh
 touch /home/cephuser/.ssh/authorized_keys
 
 
-###--- Firewall check to see if it is running if it is - configure it
+###--- Firewall check to see if it is running if it is - configure it for Ceph
 echo "###--- Configure the firewall"
 if $(systemctl is-active --quiet firewalld)
    then
@@ -70,13 +70,12 @@ if $(systemctl is-active --quiet firewalld)
     firewall-cmd --zone=public --add-service=ceph --permanent
     firewall-cmd --reload
 
-    # Setup NTP
-    # Admin VM is the NTP server
+    # NTP
     firewall-cmd --add-service=ntp --permanent
     firewall-cmd --reload
 fi
 
-###--- Configure NTP
+###--- Configure NTP - Admin VM is the NTP server
 echo "###--- Configure NTP"
 
 yum install -y ntp ntpdate ntp-doc > /dev/null 2>&1
@@ -85,7 +84,7 @@ yum install -y ntp ntpdate ntp-doc > /dev/null 2>&1
 unlink /etc/localtime
 ln -s /usr/share/zoneinfo/US/Pacific /etc/localtime
 
-# Hacks for blocked NTP packets - can't use ntpdate 
+# Hacks for blocked NTP packets when you can't use ntpdate 
 #date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
 #date -s "$(curl http://s3.amazonaws.com -v 2>&1 | grep "Date: " | awk '{ print $3 " " $5 " " $4 " " $7 " " $6 " GMT"}')"
 # Use a local NTP server
