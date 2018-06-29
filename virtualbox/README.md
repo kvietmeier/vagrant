@@ -18,7 +18,7 @@ Working on building multi-server and multi-disk environments as baselines for in
       |
       |───ClearLinux
       |     |
-      |     Intel Cklearlinux with scripts to install Apache, Docker, and Clear Containers
+      |     Intel Clearlinux with scripts to install Apache, Docker, and Clear Containers
       |
       |───devops
       |     |
@@ -34,7 +34,7 @@ Working on building multi-server and multi-disk environments as baselines for in
       |
       |───MultiServer
       |     |
-      |     Create 6 VMs using a seperate yaml distionarty file (Ceph is built on this)
+      |     Create 6 VMs using a seperate YAML dictionary file (Ceph is built on this)
       |
       |───OpenShift
       |     | 
