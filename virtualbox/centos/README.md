@@ -17,9 +17,8 @@ Configuration Tasks:
 * Shell provisioner
 
 <HR>
----
-Vagrantfile Walkthrough
----
+**Vagrantfile Walkthrough**
+<HR>
 
 
 **Header with comments - Vagrantfile is using Ruby:**
