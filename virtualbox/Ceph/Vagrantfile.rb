@@ -42,10 +42,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.network "private_network", ip: servers["ip2"]
       srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
 
+      #????
+      #srv.ssh.username = servers["ssh_user"]
+      #srv.ssh.password = servers["ssh_pass"]
+
       # VM parameters
       srv.vm.provider :virtualbox do |vb|
-        #puts "Provider - - - - - - - - "
-        #puts servers["name"]
         vb.name = servers["name"]
         vb.memory = servers["ram"]
         vb.cpus = servers["cpus"]
@@ -89,10 +91,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       end # vm.provider
 
-      puts "###-------- Provisioner Section ---------###"
       ###-------- Provisioner Section ---------###
       ### We want to add the local user's public key to .ssh/authorized_keys 
       ### and get a working /etc/hosts
+      put servers["name"]
+      put "Provision inline script - - -- - -- - - - -- - - - -- "
       config.vm.provision "Setup shell environment", type: "shell" do |s|
         s.inline = <<-SHELL
           # Install some tools
@@ -109,52 +112,38 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
           echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
           echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
-   
-          # Copy /etc/hosts
-          #if [ -e /vagrant/files/hosts ]
-          #  then sudo cat /vagrant/files/hosts >> /etc/hosts
-          #elif [ -e /home/vagrant/sync/files/hosts ]
-          #  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
-          #fi     
         SHELL
       end # inline shell provisioner config.provision
       
-      puts "------ Run bootstrap ------" 
-      puts servers["name"]
-
-      
       ### External shell scripts for configuration
+      puts servers["name"]
+      puts "Provision external script - - -- - -"
       config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
       
+      # Basic bootstrap - NTP, sudoers, etc
+      config.vm.provision "shell", inline: <<-SHELL
+        echo "Provision Every Node"
+      SHELL
+      #config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
+
       # Provision based on Role
       if ("#{servers["name"]}").include? "osd"
-        puts "I'm an OSD"
+        config.vm.provision "shell", inline: <<-SHELL
+          echo "Provision OSD"
+        SHELL
       end
 
-      if ("#{servers["name"]}").include? "osd"
-        config.vm.provision "Setup shell environment", type: "shell" do |s|
-          s.inline = <<-SHELL
-           echo "Provision Every Node"
-          SHELL
-        end 
+      if ("#{servers["name"]}").include? "admin"
+        config.vm.provision "shell", inline: <<-SHELL
+          echo "Provision Admin"
+        SHELL
       end
 
-      # OSD Node
-      #if ("#{servers["name"]}").include? "osd"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
-      #end
-  
-      # Monitor Node
-      #if ("#{servers["name"]}").include? "mon"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
-      #end
-
-      # Admin Node
-      #if ("#{servers["name"]}").include? "admin"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
-      #end
-
-      ###---- End Provisioning
+      if ("#{servers["name"]}").include? "mon"
+        config.vm.provision "shell", inline: <<-SHELL
+          echo "Provision Mon"
+        SHELL
+      end
 
     end  # config.vm.define
   end  #servers.each

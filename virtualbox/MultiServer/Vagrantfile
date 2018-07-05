@@ -70,6 +70,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           fi     
         SHELL
       end # config.provision
+      
+      config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
     end  # config.vm.define
   end  #servers.each
 end  # Vagrant.configure

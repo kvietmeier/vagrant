@@ -65,8 +65,8 @@ Vagrant.configure(2) do |config|
 
     ###------- Add an additional disk
     # Add SATA controller - you can only have one
-    #vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
-    vb.customize ['storagectl', :id, '--name',  'NVME Controller', '--add', 'pcie',  '--controller', 'NVMe', '--portcount', 6]
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+    #vb.customize ['storagectl', :id, '--name',  'NVME Controller', '--add', 'pcie',  '--controller', 'NVMe', '--portcount', 6]
 
     # Create OSD drive/s 
     unless File.exist?("Disk-01.vdi")
@@ -74,8 +74,8 @@ Vagrant.configure(2) do |config|
     end  # End create disk
 
     # Attach the drive to the controller
-    #vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
-    vb.customize [ 'storageattach', :id, '--storagectl', 'NVME Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--nonrotational', 'on', '--medium', "./Disk-01.vdi"]
+    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+    #vb.customize [ 'storageattach', :id, '--storagectl', 'NVME Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
 
   end ###--- End Provider
 
@@ -112,7 +112,7 @@ Vagrant.configure(2) do |config|
   end ###--- End Provisioner
   
 
-  # Use the "file" provisioner to copy in the global hosts file
+  # Copy in the hosts file
   config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
 
   ### Example of a Reboot in the middle of provisioning
@@ -136,8 +136,8 @@ Vagrant.configure(2) do |config|
   ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
   # Scripts are located under the the top level Vagrant folder I use so I can share them
   config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
-#  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
-#  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
+  #  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+  #  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
 
 
 end ###--- End configure(2) - this wraps up the wholething - like main()
