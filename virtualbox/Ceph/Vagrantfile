@@ -1,5 +1,5 @@
 # -*- mode: ruby -*-
-# # vi: set ft=ruby :
+# vi: set ft=ruby :
 # Vagrantfile to create a bootstrapped Ceph cluster configuration
 # Requires "servers.yml" to be in local directory
 #
@@ -89,7 +89,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       end # vm.provider
 
-      puts "###-------- Provisioner Section ---------###"
       ###-------- Provisioner Section ---------###
       ### We want to add the local user's public key to .ssh/authorized_keys 
       ### and get a working /etc/hosts
@@ -110,48 +109,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
           echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
    
-          # Copy /etc/hosts
-          #if [ -e /vagrant/files/hosts ]
-          #  then sudo cat /vagrant/files/hosts >> /etc/hosts
-          #elif [ -e /home/vagrant/sync/files/hosts ]
-          #  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
-          #fi     
         SHELL
       end # inline shell provisioner config.provision
       
-      puts "------ Run bootstrap ------" 
-      puts servers["name"]
-
+      # For debugging
+      #puts "------ Run bootstrap ------" 
+      #puts servers["name"]
       
       ### External shell scripts for configuration
-      config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
+      # - Run on every node
+      config.vm.provision "bootstrap", type: "shell" do |script|
+         script.path = "../../scripts/bash/config/bootstrap.sh"
+      end
       
-      # Provision based on Role
-      if ("#{servers["name"]}").include? "osd"
-        puts "I'm an OSD"
+      # Role based setup is in the servers.yml file - pull it out as a key:value
+      config.vm.provision "Role", type: "shell" do |script|
+         script.path = "../../scripts/bash/ceph/#{servers["script"]}"
       end
-
-      if ("#{servers["name"]}").include? "osd"
-        config.vm.provision "Setup shell environment", type: "shell" do |s|
-          s.inline = <<-SHELL
-           echo "Provision Every Node"
-          SHELL
-        end 
-      end
-
-      # OSD Node
+      
+      # Example - inline code placeholder
       #if ("#{servers["name"]}").include? "osd"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
-      #end
-  
-      # Monitor Node
-      #if ("#{servers["name"]}").include? "mon"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
-      #end
-
-      # Admin Node
-      #if ("#{servers["name"]}").include? "admin"
-      # config.vm.provision :shell, :path => "../../scripts/bash/ceph/osd.sh"
+      #  config.vm.provision "Setup shell environment", type: "shell" do |s|
+      #    s.inline = <<-SHELL
+      #     echo "Provision Every Node"
+      #    SHELL
+      #  end 
       #end
 
       ###---- End Provisioning

@@ -5,3 +5,4 @@
 #
 
 echo "Configuring Admin Node"
+echo "Admin" >> /home/vagrant/file.txt

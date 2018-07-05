@@ -5,3 +5,4 @@
 #
 
 echo "Configuring OSD Node"
+echo "OSD" >> ~/file.txt

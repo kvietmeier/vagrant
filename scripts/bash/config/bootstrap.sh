@@ -11,14 +11,12 @@ echo ""
 echo "###--- Running bootstrap.sh ---###"
 echo ""
 
+# Disable SElinux - generally not a good idea but needed for nginx for now
+sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+setenforce 0
+
 ###  - 
 # Copy /etc/hosts
-#echo "###--- Copy /etc/hosts"
-#if [ -e /vagrant/config/hosts ]
-#  then sudo cat /vagrant/config/hosts >> /etc/hosts
-#elif [ -e /home/vagrant/sync/files/hosts ]
-#  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
-#fi     
 echo "###--- Copy /etc/hosts"
 if [ -e /home/vagrant/hosts ]
   then 
@@ -36,7 +34,7 @@ fi
 echo "###--- Install some useful utilities"
 yum install -y epel-release > /dev/null 2>&1
 yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
-echo "###--- Install extra packages for Ceph"
+echo "###--- Install isome additional extra packages" 
 yum install -y openssh-server > /dev/null 2>&1
 yum install -y yum-plugin-priorities > /dev/null 2>&1
 
