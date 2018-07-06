@@ -11,9 +11,17 @@ echo ""
 echo "###--- Running bootstrap.sh ---###"
 echo ""
 
+### Doing bad things 
 # Disable SElinux - generally not a good idea but needed for nginx for now
 sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
 setenforce 0
+
+# Disable strtict hostkey checking
+tee ~/.ssh/config << EOF
+Host *
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+EOF
 
 ###  - 
 # Copy /etc/hosts
@@ -23,6 +31,8 @@ if [ -e /home/vagrant/hosts ]
     sed -i -e 's/\r//g' /home/vagrant/hosts
     cat /home/vagrant/hosts | sudo tee -a /etc/hosts > /dev/null 2>&1
 fi     
+
+
 
 ### ----  For Ceph bootstrap  ---- ###
 #awk '/^# Defaults/ && !f {$0=$0 RS "Defaults:cephuser !requiretty";f=1}1' /etc/sudoers
