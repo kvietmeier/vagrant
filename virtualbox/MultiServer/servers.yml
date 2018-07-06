@@ -19,18 +19,20 @@
   os: centos
   ram: 512
   cpus: 1
+  script: master.sh
   ip1: 172.10.0.100
   ip2: 172.16.0.100
-  ip3: 192.168.100.100
+  ip3: 172.18.0.100
   port: 3800
 - name: worker01
   box: centos/atomic-host
   os: centos
   ram: 512
   cpus: 1
+  script: worker.sh
   ip1: 172.10.0.101
   ip2: 172.16.0.101
-  ip3: 192.168.100.101
+  ip3: 172.18.0.101
   port: 3801
 - name: worker02
   box: centos/atomic-host
@@ -39,34 +41,38 @@
   cpus: 1
   ip1: 172.10.0.102
   ip2: 172.16.0.102
-  ip3: 192.168.100.102
+  ip3: 172.18.0.102
+  script: worker.sh
   port: 3802
 - name: worker03
   box: centos/atomic-host
   os: centos
   ram: 512
   cpus: 1
+  script: worker.sh
   ip1: 172.10.0.103
   ip2: 172.16.0.103
-  ip3: 192.168.100.103
+  ip3: 172.18.0.103
   port: 3803
 - name: worker04
   box: centos/atomic-host
   os: centos
   ram: 512
   cpus: 1
+  script: worker.sh
   ip1: 172.10.0.104
   ip2: 172.16.0.104
-  ip3: 192.168.100.104
+  ip3: 172.18.0.104
   port: 3804
 - name: worker05
   box: centos/atomic-host
   os: centos
   ram: 512
   cpus: 1
+  script: worker.sh
   ip1: 172.10.0.105
   ip2: 172.16.0.105
-  ip3: 192.168.100.105
+  ip3: 172.18.0.105
   port: 3805
 
 ...
