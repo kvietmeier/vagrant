@@ -171,13 +171,6 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
 
     echo "Reboot to permenantly disable SElinux"
 
-    ###  This is for later - 
-    # Copy /etc/hosts
-    #if [ -e /vagrant/files/hosts ]
-    #  then sudo cat /vagrant/files/hosts >> /etc/hosts
-    #elif [ -e /home/vagrant/sync/files/hosts ]
-    #  then sudo cat /home/vagrant/sync/files/hosts >> /etc/hosts
-    #fi     
     SHELL
   end ###--- End Provisioner
 ```
