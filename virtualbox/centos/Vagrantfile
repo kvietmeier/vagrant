@@ -36,9 +36,9 @@ Vagrant.configure(2) do |config|
 
   # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
   # unused port in the above range
-  config.vm.network "forwarded_port", guest: 22, host: 2250
-  config.vm.network "forwarded_port", guest: 80, host: 2899
-  config.vm.network "forwarded_port", guest: 8080, host: 2900
+  config.vm.network "forwarded_port", guest: 22, host: 2901
+  config.vm.network "forwarded_port", guest: 80, host: 2902
+  config.vm.network "forwarded_port", guest: 8080, host: 2903
 
   # Need to test this one more
   #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
@@ -84,15 +84,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision "Setup shell environment", type: "shell" do |s|
     s.inline = <<-SHELL
     ### Run standard bash commands using an "inline" script
-    
-
-    # Commented out until actually needed - takes too long
-    #yum update -y > /dev/null 2>&1
-    
-    # Disable SElinux - generally not a good idea but needed for nginx for now
-    sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-    setenforce 0
-
     # Add the public keys "adminvm" is a VM I use for testing things like Ansible
     mkdir /root/.ssh
     chmod 700 /root/.ssh
@@ -106,38 +97,45 @@ Vagrant.configure(2) do |config|
     echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
     echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
 
-    echo "Reboot to permenantly disable SElinux"
-
     SHELL
   end ###--- End Provisioner
   
-
   # Copy in the hosts file
   config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+
+  ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
+  # Scripts are located under the the top level Vagrant folder I use so I can share them
+  # - Run on every node
+  config.vm.provision "Basic Setup - preflight", type: "shell" do |script|
+     script.path = "../../scripts/bash/config/bootstrap.sh"
+  end
+  #  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+  #  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
+
 
   ### Example of a Reboot in the middle of provisioning
   # Requires vagrant-reload plugin
   # https://github.com/aidanns/vagrant-reload/blob/master/README.md
 
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "Do something once"  
-    echo $(date) > ~/rebootexample
-  SHELL
+  # Isn't working - causes a reconfiguration - not just as reboot
+
+  #config.vm.provision "Setup shell environment", type: "shell" do |s|
+  #  s.inline = <<-SHELL
+  #  echo "Do something once"  
+  #  echo $(date) > ~/rebootexample
+  #  SHELL
+  #end
 
   # Trigger reload
-  config.vm.provision :reload
+  #config.vm.provision :reload
 
   # Do something after the reload
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "I just rebooted - continuing"
-    echo $(date) >> ~/rebootexample
-  SHELL
-
-  ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
-  # Scripts are located under the the top level Vagrant folder I use so I can share them
-  config.vm.provision :shell, :path => "../../scripts/bash/config/bootstrap.sh"
-  #  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
-  #  config.vm.provision :shell, :path => "../../scripts/bash/docker/setupdocker.sh"
+  #config.vm.provision "Setup shell environment", type: "shell" do |s|
+  #  s.inline = <<-SHELL
+  #  echo "I just rebooted - continuing"
+  #  echo $(date) >> ~/rebootexample
+  #  SHELL
+  #end
 
 
 end ###--- End configure(2) - this wraps up the wholething - like main()

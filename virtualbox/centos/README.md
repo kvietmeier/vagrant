@@ -13,15 +13,15 @@ Configuration Tasks:
 * Configfure VM
     * Memory/CPU
     * HW devices (audio/USB)
-* Add additional disks (TBD)
-* Shell provisioner
+    * Add additional disks (TBD)
+* Shell provisioner - inline and external script
 
 <HR>
-##Vagrantfile Walkthrough
+**Vagrantfile Walkthrough**
 <HR>
 
 
-**Header with comments - Vagrantfile is using Ruby:**<br\>
+**Header with comments - Vagrantfile is using Ruby:**<br/>
 The first 2 lines aren't strictly required but are a good practice 
 ```ruby
 # -*- mode: ruby -*-
@@ -61,7 +61,7 @@ Vagrant.configure(2) do |config|
 **Network: Interface Configuration**<br/>
 In this section you define private networks and setup port forwarding.<br/>
 If we install/configure nginx we will need ports 80 and 8080 forwarded.<br/>   
-I am using 2250 for SSH because I have a few Vagrant environments and I want to avoid conflicts
+I am using 2901 for SSH because I have a few Vagrant environments and I want to avoid conflicts
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -81,9 +81,9 @@ I am using 2250 for SSH because I have a few Vagrant environments and I want to 
 
   # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
   # unused port in the above range
-  config.vm.network "forwarded_port", guest: 22, host: 2250
-  config.vm.network "forwarded_port", guest: 80, host: 2899
-  config.vm.network "forwarded_port", guest: 8080, host: 2900
+  config.vm.network "forwarded_port", guest: 22, host: 2901
+  config.vm.network "forwarded_port", guest: 80, host: 2902
+  config.vm.network "forwarded_port", guest: 8080, host: 2903
 
 ```
 
@@ -180,29 +180,6 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
     #fi     
     SHELL
   end ###--- End Provisioner
-```
-
-
-**Provisioner: Reboot during setup**<br/>
-Sometimes you need to reboot after doing something but befiore you are completely done 
-```ruby
-  ### Example of a Reboot in the middle of provisioning
-  # Requires vagrant-reload plugin
-  # https://github.com/aidanns/vagrant-reload/blob/master/README.md
-
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "Do something requiring reboot"  
-    echo $(date) > ~/reboottime
-  SHELL
-
-  # Trigger reload using plugin
-  config.vm.provision :reload
-
-  # Do something after the reload
-  config.vm.provision "shell", inline: <<-SHELL
-    echo "I just rebooted - continuing"
-    echo $(date) >> ~/reboottime
-  SHELL
 ```
 
 **Provisioner: Call seperate shell scripts**<br/>   

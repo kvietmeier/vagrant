@@ -6,12 +6,14 @@
 
 # SSH Port Forwarding
 2222  - Vagarant default port
+......
 3800  - master
 3801  - worker01
 3802  - worker02
 3803  - worker03
 3804  - worker04
 3805  - worker05
+......
 3820  - cephadmin
 3821  - osd01
 3822  - osd02
@@ -20,18 +22,26 @@
 3825  - mon02
 ......
 9000  Admin VM
+......
+2901  - Centos testing SSH
+2902  - Centos testing Port 80
+2903  - Centos testing Port 8080
+2910  - MultiDisk SSH
+2911  - MultiDisk Port 80
+2912  - MultiDisk Port 8080
 
 
 ###-------  Subnets/Networks
+# Note - 172.160.0.0 is the default Docker network
 172.16.0.0/24
-172.16.0.1      Gateway
-172.16.0.2      Gateway
-172.16.0.3      Gateway
+172.16.0.1      reserved
+172.16.0.2      reserved
+172.16.0.3      reserved
 
 172.10.0.0/24
-172.10.0.1      Gateway
-172.10.0.2      Gateway
-172.10.0.3      Gateway
+172.10.0.1      reserved
+172.10.0.2      reserved
+172.10.0.3      reserved
 
 
 ###-------------  Hosts  -------------###
