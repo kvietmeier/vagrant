@@ -18,10 +18,23 @@ setenforce 0
 
 # Disable strtict hostkey checking
 tee ~/.ssh/config << EOF
+# Set some SSH defaults 
+
 Host *
    StrictHostKeyChecking no
    UserKnownHostsFile=/dev/null
+
 EOF
+
+tee /home/vagrant/.ssh/config << EOF
+# Set some SSH defaults 
+
+Host *
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+
+EOF
+
 
 ###  - 
 # Copy /etc/hosts

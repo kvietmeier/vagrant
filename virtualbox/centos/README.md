@@ -21,7 +21,8 @@ Configuration Tasks:
 <HR>
 
 
-**Header with comments - Vagrantfile is using Ruby:**
+**Header with comments - Vagrantfile is using Ruby:**<br\>
+The first 2 lines aren't strictly required but are a good practice 
 ```ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
@@ -31,7 +32,7 @@ Configuration Tasks:
 
 
 **Setting variables local to Vagrantfile**<br/>
-Using standard scripting best praqxtices it is a good idea to define varibles up front.
+Using standard scripting best practices it is a good idea to define variables up front.
 ```ruby
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
@@ -60,7 +61,7 @@ Vagrant.configure(2) do |config|
 **Network: Interface Configuration**<br/>
 In this section you define private networks and setup port forwarding.<br/>
 If we install/configure nginx we will need ports 80 and 8080 forwarded.<br/>   
-I am using 2250 for SSH bwecause I have a few Vagrant environments and I want to avoid conflicts
+I am using 2250 for SSH because I have a few Vagrant environments and I want to avoid conflicts
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -211,6 +212,23 @@ Usefull to breakup tasks and make it easy to switch between use cases
   config.vm.provision :shell, :path => "config/bootstrap.sh"
   config.vm.provision :shell, :path => "docker/setupdocker.sh"
   config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+```
+
+** Provisioner: Alternative forms for calling an external scripts**<br\>
+These aren't used in this Vagrantfile but included here for documentation<br\>
+If you are calling these in a loop (see MultiServer/Ceph environments) you need to explicitly "end" the call<br\>
+Also note the path - you can use relative/absolute paths pointing to a set of common scripts  
+```ruby
+### External shell scripts for configuration
+# - Run on every node
+config.vm.provision "bootstrap", type: "shell" do |script|
+   script.path = "../../scripts/bash/config/bootstrap.sh"
+end
+      
+# Role based setup is in the servers.yml file - pull it out as a key:value
+config.vm.provision "Role", type: "shell" do |script|
+   script.path = "../../scripts/bash/ceph/#{servers["script"]}"
+end
 ```
 
 

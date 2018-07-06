@@ -78,9 +78,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
      
       # Role based setup is in the servers.yml file - pull it out as a key:value
-      #config.vm.provision "Role", type: "shell" do |script|
-      #  script.path = "../../scripts/bash/k8s/#{servers["script"]}"
-      #end
+      config.vm.provision "Role", type: "shell" do |script|
+        script.path = "../../scripts/bash/k8s/#{servers["script"]}"
+      end
      
       # Example - inline code placeholder
       #if ("#{servers["name"]}").include? "osd"
