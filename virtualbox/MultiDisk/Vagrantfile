@@ -53,4 +53,7 @@ Vagrant.configure("2") do |config|
 
     end # End Provider
    
+    # Copy in the hosts file
+    config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+      
 end

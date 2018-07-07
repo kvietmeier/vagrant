@@ -101,7 +101,12 @@ Vagrant.configure(2) do |config|
   end ###--- End Provisioner
   
   # Copy in the hosts file
-  config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+  #config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+
+  config.vm.provision :file do |file|
+    file.source = "../../scripts/env/hosts" 
+    file.destination =  "~/hosts"
+  end  
 
   ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
   # Scripts are located under the the top level Vagrant folder I use so I can share them
@@ -118,9 +123,6 @@ Vagrant.configure(2) do |config|
   #   script.path = "../../scripts/bash/docker/setupdocker.sh"
   #end
 
-  config.vm.provision "Install Docker", type: "shell" do |script|
-     script.path = "../../scripts/bash/ceph/ceph-common.sh"
-  end
 
   ### Example of a Reboot in the middle of provisioning
   # Requires vagrant-reload plugin

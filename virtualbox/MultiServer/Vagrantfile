@@ -71,6 +71,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         SHELL
       end # config.provision
 
+      # Copy in the hosts file
+      config.vm.provision "file", source: "../../scripts/env/hosts", destination: "~/hosts"
+      
       ### External shell scripts for configuration
       # - Run on every node
       config.vm.provision "bootstrap", type: "shell" do |script|

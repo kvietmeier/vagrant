@@ -112,9 +112,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         SHELL
       end # inline shell provisioner config.provision
       
-      # For debugging
-      #puts "------ Run bootstrap ------" 
-      #puts servers["name"]
+      # Copy in the hosts file
+      config.vm.provision :file do |file|
+         file.source = "../../scripts/env/hosts" 
+         file.destination =  "~/hosts"
+      end  
       
       ### External shell scripts for configuration
       # - Run on every node - basic pre-flight

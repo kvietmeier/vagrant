@@ -16,8 +16,12 @@ echo ""
 sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
 setenforce 0
 
+# Enable password authentication
+sed -i "s/^PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+systemctl restart sshd 
+
 # Disable strict hostkey checking for root and vagrant
-tee ~/.ssh/config << EOF
+tee ~/.ssh/config << EOF > /dev/null 2>&1
 # Set some SSH defaults 
 
 Host *
@@ -27,7 +31,7 @@ Host *
 EOF
 chmod 600 ~/.ssh/config
 
-tee /home/vagrant/.ssh/config << EOF
+tee /home/vagrant/.ssh/config << EOF > /dev/null 2>&1
 # Set some SSH defaults 
 
 Host *
@@ -38,7 +42,8 @@ EOF
 chown vagrant:vagrant /home/vagrant/.ssh/config
 chmod 600 /home/vagrant/.ssh/config
 
-###  - 
+
+###--- System file setup 
 # Copy /etc/hosts
 echo "###--- Copy /etc/hosts"
 if [ -e /home/vagrant/hosts ]
@@ -54,8 +59,7 @@ echo "###--- Install some useful utilities"
 yum install -y epel-release > /dev/null 2>&1
 yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
 echo "###--- Install some additional extra packages" 
-yum install -y openssh-server > /dev/null 2>&1
-yum install -y yum-plugin-priorities > /dev/null 2>&1
+yum install -y openssh-server sshpass yum-plugin-priorities > /dev/null 2>&1
 
 ###--- Create/modify an additional user account
 # NOTE - may want to customize the users shell
@@ -80,7 +84,7 @@ touch /home/labuser1/.ssh/authorized_keys
 chown labuser1:labuser1 /home/labuser1/.ssh/authorized_keys
 chmod 700 /home/labuser1/.ssh/authorized_keys
 
-tee /home/labuser1/.ssh/config << EOF
+tee /home/labuser1/.ssh/config << EOF > /dev/null 2>&1
 # Set some SSH defaults 
 
 Host *
@@ -91,8 +95,11 @@ EOF
 chown labuser1:labuser1 /home/labuser1/.ssh/config
 chmod 600 /home/labuser1/.ssh/config
 
-# Generate a key
+# Generate a key for the user
 su - labuser1 --command "ssh-keygen -t rsa -N \"\" -f ~/.ssh/id_rsa" > /dev/null 2>&1
+
+# For vagrant user too 
+su - vagrant --command "ssh-keygen -t rsa -N \"\" -f ~/.ssh/id_rsa" > /dev/null 2>&1
 
 ###---- End User create section
 

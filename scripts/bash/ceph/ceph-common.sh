@@ -51,7 +51,7 @@ EOF
 rpm --import 'https://download.ceph.com/keys/release.asc'
 
 # Install Required Packages
-yum install snappy leveldb gdisk python-argparse gperftools-libs -y
+yum install snappy leveldb gdisk python-argparse gperftools-libs -y  > /dev/null 2>&1
 
 ###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
 # NOTE - may want to customize the users shell
@@ -76,7 +76,7 @@ touch /home/cephuser/.ssh/authorized_keys
 chown cephuser:cephuser /home/cephuser/.ssh/authorized_keys
 chmod 700 /home/cephuser/.ssh/authorized_keys
 
-tee /home/cephuser/.ssh/config << EOF
+tee /home/cephuser/.ssh/config << EOF > /dev/null 2>&1
 # Set some SSH defaults 
 
 Host *
@@ -88,7 +88,7 @@ chown cephuser:cephuser /home/cephuser/.ssh/config
 chmod 600 /home/cephuser/.ssh/config
 
 # Generate a key
-su - cephuser --command "ssh-keygen -t rsa -N \"\" -f ~/.ssh/id_rsa"
+su - cephuser --command "ssh-keygen -t rsa -N \"\" -f ~/.ssh/id_rsa"  > /dev/null 2>&1
 
 ###---- End User create section
 
