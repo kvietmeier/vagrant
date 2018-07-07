@@ -16,7 +16,7 @@ echo ""
 sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
 setenforce 0
 
-# Disable strtict hostkey checking
+# Disable strict hostkey checking for root and vagrant
 tee ~/.ssh/config << EOF
 # Set some SSH defaults 
 
@@ -25,6 +25,7 @@ Host *
    UserKnownHostsFile=/dev/null
 
 EOF
+chmod 600 ~/.ssh/config
 
 tee /home/vagrant/.ssh/config << EOF
 # Set some SSH defaults 
@@ -34,7 +35,8 @@ Host *
    UserKnownHostsFile=/dev/null
 
 EOF
-
+chown vagrant:vagrant /home/vagrant/.ssh/config
+chmod 600 /home/vagrant/.ssh/config
 
 ###  - 
 # Copy /etc/hosts
@@ -46,51 +48,58 @@ if [ -e /home/vagrant/hosts ]
 fi     
 
 
-
-### ----  For Ceph bootstrap  ---- ###
-#awk '/^# Defaults/ && !f {$0=$0 RS "Defaults:cephuser !requiretty";f=1}1' /etc/sudoers
-#sed '/^# Defaults/{s/.*/&\Defaults:cephuser !requiretty/;:a;n;ba}' /etc/sudoers
-#sed '/^# Defaults/{s/.*/$/\'$'\n''Defaults:cephuser !requiretty/;}' /etc/sudoers
-
 ###--- Install any extra packages
 # Install some useful tools and update the system
 echo "###--- Install some useful utilities"
 yum install -y epel-release > /dev/null 2>&1
 yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
-echo "###--- Install isome additional extra packages" 
+echo "###--- Install some additional extra packages" 
 yum install -y openssh-server > /dev/null 2>&1
 yum install -y yum-plugin-priorities > /dev/null 2>&1
 
-###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
+###--- Create/modify an additional user account
 # NOTE - may want to customize the users shell
 echo "###--- Adding a User"
-useradd -d /home/cephuser -m cephuser 
-chown cephuser:cephuser /home/cephuser/
-passwd -d cephuser
-echo "ceph123" | passwd cephuser --stdin
+useradd -d /home/labuser1 -m labuser1 
+chown labuser1:labuser1 /home/labuser1/
+passwd -d labuser1
+echo "labuser1" | passwd labuser1 --stdin
 
-# Set some sudoers parameters in /etc/sudoers.d/cephuser
-echo "Adding  Defaults:cephuser !requiretty to /etc/sudoers.d/cephuser"
-echo "cephuser ALL = (root) NOPASSWD:ALL" > /etc/sudoers.d/cephuser
-echo "Defaults:cephuser !requiretty" >> /etc/sudoers
-sudo chmod 0440 /etc/sudoers.d/cephuser
+# Set some sudoers parameters in /etc/sudoers.d/labuser1
+echo "Adding  Defaults:labuser1 !requiretty to /etc/sudoers.d/labuser1"
+echo "labuser1 ALL = (root) NOPASSWD:ALL" > /etc/sudoers.d/labuser1
+echo "Defaults:labuser1 !requiretty" >> /etc/sudoers
+sudo chmod 0440 /etc/sudoers.d/labuser1
 
-# - add section to copy in SSH keys
-mkdir /home/cephuser/.ssh
-chown cephuser:cephuser /home/cephuser/.ssh
-chmod 700 /home/cephuser/.ssh
-touch /home/cephuser/.ssh/authorized_keys
+# - Configure SSH
+mkdir /home/labuser1/.ssh
+chown labuser1:labuser1 /home/labuser1/.ssh
+chmod 700 /home/labuser1/.ssh
 
+touch /home/labuser1/.ssh/authorized_keys
+chown labuser1:labuser1 /home/labuser1/.ssh/authorized_keys
+chmod 700 /home/labuser1/.ssh/authorized_keys
 
-###--- Firewall check to see if it is running if it is - configure it for Ceph
+tee /home/labuser1/.ssh/config << EOF
+# Set some SSH defaults 
+
+Host *
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+
+EOF
+chown labuser1:labuser1 /home/labuser1/.ssh/config
+chmod 600 /home/labuser1/.ssh/config
+
+# Generate a key
+su - labuser1 --command "ssh-keygen -t rsa -N \"\" -f ~/.ssh/id_rsa" > /dev/null 2>&1
+
+###---- End User create section
+
+###--- Firewall check to see if it is running if it is - configure it for NTP
 echo "###--- Configure the firewall"
 if $(systemctl is-active --quiet firewalld)
    then
-    # Ceph
-    firewall-cmd --zone=public --add-service=ceph-mon --permanent
-    firewall-cmd --zone=public --add-service=ceph --permanent
-    firewall-cmd --reload
-
     # NTP
     firewall-cmd --add-service=ntp --permanent
     firewall-cmd --reload

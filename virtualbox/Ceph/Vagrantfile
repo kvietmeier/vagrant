@@ -117,11 +117,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       #puts servers["name"]
       
       ### External shell scripts for configuration
-      # - Run on every node
+      # - Run on every node - basic pre-flight
       config.vm.provision "bootstrap", type: "shell" do |script|
          script.path = "../../scripts/bash/config/bootstrap.sh"
       end
-      
+
+      # - Run on every node - Ceph common stuff
+      config.vm.provision "Install Ceph Common Stuff", type: "shell" do |script|
+         script.path = "../../scripts/bash/ceph/ceph-common.sh"
+      end
+
       # Role based setup is in the servers.yml file - pull it out as a key:value
       config.vm.provision "Role", type: "shell" do |script|
          script.path = "../../scripts/bash/ceph/#{servers["script"]}"

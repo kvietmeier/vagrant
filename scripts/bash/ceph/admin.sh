@@ -6,3 +6,5 @@
 
 echo "Configuring Admin Node"
 echo "Admin" >> /home/vagrant/file.txt
+
+yum install ceph-deploy -y 
