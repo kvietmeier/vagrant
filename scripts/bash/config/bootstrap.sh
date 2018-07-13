@@ -50,6 +50,7 @@ if [ -e /home/vagrant/hosts ]
   then 
     sed -i -e 's/\r//g' /home/vagrant/hosts
     cat /home/vagrant/hosts | sudo tee -a /etc/hosts > /dev/null 2>&1
+    rm -f /home/vagrant/hosts
 fi     
 
 
@@ -60,6 +61,13 @@ yum install -y epel-release > /dev/null 2>&1
 yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
 echo "###--- Install some additional extra packages" 
 yum install -y openssh-server sshpass yum-plugin-priorities > /dev/null 2>&1
+
+# Update everything
+#yum update -y 2>&1
+
+# Update the man pages
+catman > /dev/null 2>&1
+
 
 ###--- Create/modify an additional user account
 # NOTE - may want to customize the users shell

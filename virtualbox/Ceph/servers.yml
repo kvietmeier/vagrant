@@ -21,7 +21,7 @@
 - name: osd01
   box: centos/7
   os: centos
-  script: osd.sh
+  script: osd-mon.sh
   ram: 512
   cpus: 1
   ip1: 172.10.0.121
@@ -31,7 +31,7 @@
 - name: osd02
   box: centos/7
   os: centos
-  script: osd.sh
+  script: osd-mon.sh
   ram: 512
   cpus: 1
   ip1: 172.10.0.122
@@ -41,27 +41,27 @@
 - name: osd03
   box: centos/7
   os: centos
-  script: osd.sh
+  script: osd-mon.sh
   ram: 512
   cpus: 1
   ip1: 172.10.0.123
   ip2: 172.16.0.123
   ip3: 172.18.0.123
   port: 3823
-- name: mon01
+- name: client01
   box: centos/7
   os: centos
-  script: monitor.sh
+  script: client.sh
   ram: 512
   cpus: 1
   ip1: 172.10.0.124
   ip2: 172.16.0.124
   ip3: 172.18.0.124
   port: 3824
-- name: mon02
+- name: client02
   box: centos/7
   os: centos
-  script: monitor.sh
+  script: client.sh
   ram: 512
   cpus: 1
   ip1: 172.10.0.125

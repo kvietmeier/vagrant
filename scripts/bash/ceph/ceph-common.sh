@@ -51,7 +51,7 @@ EOF
 rpm --import 'https://download.ceph.com/keys/release.asc'
 
 # Install Required Packages
-yum install snappy leveldb gdisk python-argparse gperftools-libs -y  > /dev/null 2>&1
+yum install snappy leveldb gdisk python-argparse gperftools-libs python-distribute -y  > /dev/null 2>&1
 
 ###--- Create/modify ceph-deploy user - we could use the vagrant user that already exists
 # NOTE - may want to customize the users shell

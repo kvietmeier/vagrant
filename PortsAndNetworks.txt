@@ -29,6 +29,9 @@
 2910  - MultiDisk SSH
 2911  - MultiDisk Port 80
 2912  - MultiDisk Port 8080
+2920  - ClearLinux SSH
+2921  - ClearLinux Port 80
+2922  - ClearLinux Port 8080
 
 
 ###-------  Subnets/Networks
@@ -45,8 +48,13 @@
 
 
 ###-------------  Hosts  -------------###
+172.16.0.200    centos 
+172.10.0.200    centos-bk 
 172.16.0.201    multidisk01 
 172.10.0.201    multidisk01-bk 
+172.16.0.220    clearlinux01 
+172.10.0.220    clearlinux01-bk 
+
 
 #-- Kubernetes Cluster (Multiserver)
 172.16.0.100    Master 
@@ -56,7 +64,7 @@
 172.16.0.104    worker04
 172.16.0.105    worker05
 
-172.16.0.100    master-bk
+172.10.0.100    master-bk
 172.10.0.101    worker01-bk
 172.10.0.102    worker02-bk
 172.10.0.103    worker03-bk
@@ -71,7 +79,7 @@
 172.16.0.124    mon01
 172.16.0.125    mon02
 
-172.16.0.120    cephadmin-bk
+172.10.0.120    cephadmin-bk
 172.10.0.121    osd01-bk
 172.10.0.122    osd02-bk
 172.10.0.123    osd03-bk

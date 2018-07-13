@@ -12,11 +12,10 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 
 
 Vagrant.configure(2) do |config|
-  #config.vm.box = "ClearLinux-23090.box"
   config.vm.box = "AntonioMeireles/ClearLinux"
   #config.vm.box_version = "21570"
   #config.vm.box_version = "22880"
-  config.vm.box_version = "23090"
+  #config.vm.box_version = "23090"
   config.vm.hostname = "clearlinux"
 
   config.vm.usable_port_range= 2800..2900
@@ -25,9 +24,9 @@ Vagrant.configure(2) do |config|
 
   # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
   # unused port in the above range
-  config.vm.network "forwarded_port", guest: 22, host: 2251
-  config.vm.network "forwarded_port", guest: 80, host: 2901
-  config.vm.network "forwarded_port", guest: 8080, host: 2902
+  config.vm.network "forwarded_port", guest: 22, host: 2920
+  config.vm.network "forwarded_port", guest: 80, host: 2921
+  config.vm.network "forwarded_port", guest: 8080, host: 2922
 
 
   config.vm.provider "virtualbox" do |vb|

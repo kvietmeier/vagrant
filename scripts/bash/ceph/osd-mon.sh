@@ -4,10 +4,6 @@
 
 #
 
-echo ""
-echo "Configuring Monitor Node"
-echo "Monitor" >> /home/vagrant/file.txt
+echo "Configuring OSD/Monitor Node"
+echo "OSD/Monitor" >> /home/vagrant/file.txt
 
-echo ""
-echo "Done Configuring Monitor Node"
-echo ""
