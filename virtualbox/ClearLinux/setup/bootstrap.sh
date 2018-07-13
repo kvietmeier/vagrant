@@ -7,6 +7,8 @@ echo ""
 echo "Running bootstrap.sh"
 echo ""
 
+
+# Proxies were giving me grief
 tee unsetproxy.sh  << EOF > /dev/null 2>&1 
 http_proxy=""
 https_proxy=""
@@ -16,10 +18,6 @@ HTTPS_PROXY=""
 NO_PROXY=""
 export http_proxy https_proxy no_proxy HTTP_PROXY HTTPS_PROXY NO_PROXY
 EOF
-
-sudo mkdir -p /etc/swupd
-echo 'https://linux-ftp.jf.intel.com/pub/mirrors/clearlinux/update/' | sudo tee /etc/swupd/mirror_contenturl
-echo 'https://linux-ftp.jf.intel.com/pub/mirrors/clearlinux/update/' | sudo tee /etc/swupd/mirror_versionurl
 
 dos2unix installcerts.sh > /dev/null 2>&1
 sudo bash installcerts.sh > /dev/null 2>&1

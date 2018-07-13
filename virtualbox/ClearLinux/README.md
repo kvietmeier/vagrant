@@ -14,8 +14,18 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = "clearlinux"
 ````
 
-./setup has bootstrap and application setup scripts use with these lines in Vagrantfile:
+./setup has bootstrap and application setup scripts you can use with these lines in Vagrantfile:<br/>
+I also need to copy in a script to install certificates for internal mirrors - you should comment out or remove those lines.
 ````ruby
-  config.vm.provision :shell, :path => "setup/bootstrap.sh"
-  config.vm.provision :shell, :path => "setup/apache.sh"
+### External shell scripts for configuration
+# Copy in a script to install certs
+config.vm.provision :file do |file|
+   file.source = "../../certs/certificates.sh" 
+   file.destination =  "/home/clear/installcerts.sh"
+end  
+    
+# - Basic bootstrap - install Docker and Clear Containers
+config.vm.provision "bootstrap", type: "shell" do |script|
+   script.path = "setup/bootstrap.sh"
+end
 ````
