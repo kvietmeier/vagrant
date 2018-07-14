@@ -1,4 +1,4 @@
-# Intel Clear Linux Environment
+## Intel Clear Linux Environment
 
 You will need the Clear Linux Vagrant plugin:
 
