@@ -8,7 +8,7 @@ vagrant plugin install vagrant-guests-clearlinux
 
 **NOTE:** It is very important to check for plugin updates after you update the box version.
 
-**Vagrantfile:**
+**Vagrantfile:**<br\>
 Use the Clear Linux box and set a hostname
 
 ````ruby
@@ -27,6 +27,7 @@ config.vm.provision :file do |file|
    file.source = "../../certs/certificates.sh" 
    file.destination =  "/home/clear/installcerts.sh"
 end  
+
 # - Basic bootstrap - install Docker and Clear Containers
 config.vm.provision "bootstrap", type: "shell" do |script|
    script.path = "setup/bootstrap.sh"
