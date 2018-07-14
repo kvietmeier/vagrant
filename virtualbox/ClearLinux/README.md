@@ -1,4 +1,5 @@
 ## Intel Clear Linux Environment
+I have created a basic Vagrantfile and shell provisioning scripts to spin up a Clear Linux instance with Docker and Clear Containmers installed and enabled.
 
 You will need the Clear Linux Vagrant plugin:
 
@@ -8,7 +9,6 @@ vagrant plugin install vagrant-guests-clearlinux
 
 **NOTE:** It is very important to check for plugin updates after you update the box version.
 
-- - - 
 **Vagrantfile:**<br/>
 Use the Clear Linux box and set a hostname
 
