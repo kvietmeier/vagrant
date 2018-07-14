@@ -26,7 +26,6 @@ config.vm.provision :file do |file|
    file.source = "../../certs/certificates.sh" 
    file.destination =  "/home/clear/installcerts.sh"
 end  
-    
 # - Basic bootstrap - install Docker and Clear Containers
 config.vm.provision "bootstrap", type: "shell" do |script|
    script.path = "setup/bootstrap.sh"
