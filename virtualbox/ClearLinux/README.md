@@ -8,7 +8,7 @@ vagrant plugin install vagrant-guests-clearlinux
 
 **NOTE:** It is very important to check for plugin updates after you update the box version.
 
-**Vagrantfile:**<br\>
+**Vagrantfile:**<br/>
 Use the Clear Linux box and set a hostname
 
 ````ruby
