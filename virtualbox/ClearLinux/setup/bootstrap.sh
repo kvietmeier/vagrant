@@ -32,3 +32,35 @@ systemctl enable docker
 systemctl start docker
 systemctl enable cc3-proxy
 systemctl start cc3-proxy
+
+
+### Modify .bashrc for root and clear - a hack right now - I'll clean it up later.
+sudo tee -a /root/.bashrc << EOF > /dev/null 2>&1
+
+### Add some lines to bashrc
+# Set the prompt
+export PS1="\u@\h:\Wr#> \[$(tput sgr0)\]"
+
+# Some aliases
+alias ls='ls --color=never'
+alias ll="ls -lhA"
+alias la="ls -A"
+alias cd..="cd .."
+
+set -o vi
+EOF
+
+sudo tee -a /home/clear/.bashrc << EOF > /dev/null 2>&1
+
+### Add some lines to bashrc
+# Set the prompt
+export PS1="\u@\h:\W> \[$(tput sgr0)\]"
+
+# Some aliases
+alias ls='ls --color=never'
+alias ll="ls -lhA"
+alias la="ls -A"
+alias cd..="cd .."
+
+set -o vi
+EOF
