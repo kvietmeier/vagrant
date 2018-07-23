@@ -218,5 +218,5 @@ end
 **Close out "configure(2)"**
 
 ```ruby
-end ###--- End configure(2) - this wraps up the wholething - like main()
+end ###--- End configure(2) - this wraps up the whole thing - like main()
 ```
