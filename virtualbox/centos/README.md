@@ -145,6 +145,7 @@ We define the Provider specific options - in this case VirtualBox.  This include
 **Provisioner: Using shell provisioner**<br/>
 A basic box isn't terribly useful. Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing. <br/>
 We also do a bad thing - disable SElinux. <br/>
+I moved most of this to a "bootsrap" script but leave it here as an example<br/>
 ToDo - you could put in a check for OS type and switch between yum and apt-get.
 
 ```ruby
@@ -183,7 +184,7 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
 ```
 
 **Provisioner: Call seperate shell scripts**<br/>
-Usefull to breakup tasks and make it easy to switch between use cases
+Useful to breakup tasks and make it easy to switch between use cases - works for single machine.
 
 ```ruby
   # Demonstrate using external shell scripts for post bringup configuration
@@ -193,7 +194,6 @@ Usefull to breakup tasks and make it easy to switch between use cases
 ```
 
 ** Provisioner: Alternative forms for calling an external scripts**<br\>
-These aren't used in this Vagrantfile but included here for documentation<br\>
 If you are calling these in a loop (see MultiServer/Ceph environments) you need to explicitly "end" the call<br\>
 Also note the path - you can use relative/absolute paths pointing to a set of common scripts  
 
