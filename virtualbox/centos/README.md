@@ -198,7 +198,7 @@ Useful to breakup tasks and make it easy to switch between use cases - works for
   config.vm.provision :shell, :path => "nginx/setupnginx.sh"
 ```
 
-** Provisioner: Alternative forms for calling an external scripts**<br\>
+**Provisioner: Alternative forms for calling an external scripts**<br\>
 If you are calling these in a loop (see MultiServer/Ceph environments) you need to explicitly "end" the call<br\>
 Also note the path - you can use relative/absolute paths pointing to a set of common scripts  
 
