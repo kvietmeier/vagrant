@@ -9,7 +9,7 @@ The projects build from the most basic, "simplevm", to more complex setups.<br/>
 4. **MultiServer:** A multi-machine example using a sourced yaml definition filea - could be used for a Kubernetes cluster.
 5. **Ceph:** A multi-machine, multi-disk example with shell provisioners to do the Ceph "pre-flight".
 
-Projects:
+**Projects:**
 
     Current Set of Projects:
       ├───AtomicCentos
