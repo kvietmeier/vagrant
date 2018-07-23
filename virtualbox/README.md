@@ -1,5 +1,13 @@
 ## VirtualBox Provider based Vagrant Projects
 
+My projects build from the most basic, "simplevm", to more complex.<br/>
+
+1. simplvm: Most basic Vagrantfile with more complex but still simple examples.
+2. centos: Fully commented single-machine example that utilizes as many Vagrantfile methods as possible, including adding a disk.
+3. MultiDisk: A single-machine example attaching multple drives to the guest.
+4. MultiServer: A multi-machine example using a sourced yaml definition file
+5. Ceph: A multi-machine, multi-disk example with shell provisioners to do the Ceph "pre-flight"
+
 Working on building multi-server and multi-disk environments as baselines for installing things like Ceph and Kubernetes clusters.
 
     Current Set of Projects:
