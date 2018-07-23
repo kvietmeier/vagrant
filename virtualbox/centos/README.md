@@ -145,8 +145,13 @@ We define the Provider specific options - in this case VirtualBox.  This include
 **Provisioner: Using shell provisioner**<br/>
 A basic box isn't terribly useful. Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing. <br/>
 We also do a bad thing - disable SElinux. <br/>
-I moved most of this to a "bootsrap" script but leave it here as an example<br/>
-ToDo - you could put in a check for OS type and switch between yum and apt-get.
+I moved most of this to a "bootstrap" script but leave it here as an example<br/>
+ToDo:
+
+1. Put in a check for OS type and switch between yum and apt-get.
+2. Parameterize the Vagrantfile to choose extra roles (Docker, nginx, Minio, etc)
+3. Get NVMe controller working
+4. Script setting up disks inside guest
 
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
