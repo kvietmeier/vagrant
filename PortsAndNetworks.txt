@@ -21,7 +21,7 @@
 3824  - mon01
 3825  - mon02
 ......
-9000  Admin VM
+8000  Admin VM
 ......
 2901  - Centos testing SSH
 2902  - Centos testing Port 80
@@ -32,6 +32,8 @@
 2920  - ClearLinux SSH
 2921  - ClearLinux Port 80
 2922  - ClearLinux Port 8080
+......
+9000  - Minio
 
 
 ###-------  Subnets/Networks

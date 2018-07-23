@@ -23,6 +23,7 @@ Configuration Tasks:
 
 **Header with comments - Vagrantfile is using Ruby:**<br/>
 The first 2 lines aren't strictly required but are a good practice 
+
 ```ruby
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
@@ -30,9 +31,9 @@ The first 2 lines aren't strictly required but are a good practice
 # Basic Vagrantfile for a single VM with comments
 ```
 
-
 **Setting variables local to Vagrantfile**<br/>
 Using standard scripting best practices it is a good idea to define variables up front.
+
 ```ruby
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
@@ -43,9 +44,9 @@ adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
 ```
 
-
 **Start VM configuration**<br/>
 Define the box to use and VM names for Vagrant stdout and the guest OS.
+
 ```ruby
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -57,11 +58,11 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos"
 ```
 
-
 **Network: Interface Configuration**<br/>
 In this section you define private networks and setup port forwarding.<br/>
 If we install/configure nginx we will need ports 80 and 8080 forwarded.<br/>   
 I am using 2901 for SSH because I have a few Vagrant environments and I want to avoid conflicts
+
 ```ruby
   ###------- Network setup section - not Provider specific
   # You can create additional private networks which are configured as host-only networks by the Provider
@@ -87,36 +88,41 @@ I am using 2901 for SSH because I have a few Vagrant environments and I want to 
 
 ```
 
-
 **Provider:  Virtualbox specific configuration**<br/>
 We define the Provider specific options - in this case VirtualBox.  This includes adding an additional disk.
+
 ```ruby
   ###------- Provider specific VM definition and creation begins here
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   config.vm.provider "virtualbox" do |vb|
-   
-   # Confifgure the amount of memory and number of CPUs for the VM:
-   vb.memory = "1024"
-   vb.cpus = "1"
 
-   # Set the name in Virtualbox (GUI and CLI)
-   vb.name = "centos"
+    # Add VM to a group in VBox (restart VBox GUI to see)
+    vb.customize ["modifyvm", :id, "--groups", "/Testing" ]
 
-   ###-------  Configure low level system parameters
-   # - get rid of extra stuff
-   # - need "ioapic on" when adding extra drives
-   # - use "vb.customize" when modifying parameters that don't have predefined aliases like "vb.cpu"
-   vb.customize ["modifyvm", :id, "--ioapic", "on" ]
-   vb.customize ["modifyvm", :id, "--audio", "none" ]
-   vb.customize ["modifyvm", :id, "--usb", "off" ]
+    # Set the name in Virtualbox (GUI and CLI)
+    vb.name = "centos"
+
+    # Configure the amount of memory and number of CPUs for the VM:
+    vb.memory = "512"
+    vb.cpus = "1"
+
+    ###-------  Configure low level system parameters
+    # - get rid of extra stuff
+    # - need "ioapic on" when adding extra drives
+    # - use "vb.customize" when modifying parameters that don't have predefined aliases like "vb.cpu"
+    vb.customize ["modifyvm", :id, "--ioapic", "on" ]
+    vb.customize ["modifyvm", :id, "--audio", "none" ]
+    vb.customize ["modifyvm", :id, "--usb", "off" ]
 ```
 
 **Add an additional Disk**<br/>
 3 Steps
+
 1. Create/add the SATA controller to the Guest
 2. Create the disk file - good practice to see if it already exists
 3. Attach the disk to a port on the controller - the name is important
+
 ```ruby
 
     ###------- Add an additional disk
@@ -133,25 +139,26 @@ We define the Provider specific options - in this case VirtualBox.  This include
 
   end ###--- End Provider
 ```
-**End Provider**
 
+**End Provider**
 
 **Provisioner: Using shell provisioner**<br/>
 A basic box isn't terribly useful. Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing. <br/>
 We also do a bad thing - disable SElinux. <br/>
 ToDo - you could put in a check for OS type and switch between yum and apt-get.
+
 ```ruby
   ###------- Provisioner section - this is where you customize the guest OS.
   ### This example is using the Shell provisioner
   config.vm.provision "Setup shell environment", type: "shell" do |s|
     s.inline = <<-SHELL
     ### Run standard bash commands using an "inline" script
-    
+
     # Install some useful tools and update the system
-    yum install -y net-tools traceroute git ansible gcc make python policycoreutils-python > /dev/null 2>&1 
+    yum install -y net-tools traceroute git ansible gcc make python policycoreutils-python > /dev/null 2>&1
     yum install -y docker > /dev/null 2>&1 
     #yum update -y > /dev/null 2>&1
-    
+
     # Disable SElinux - generally not a good idea but needed foir nginx for now
     sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
     setenforce 0
@@ -175,8 +182,9 @@ ToDo - you could put in a check for OS type and switch between yum and apt-get.
   end ###--- End Provisioner
 ```
 
-**Provisioner: Call seperate shell scripts**<br/>   
+**Provisioner: Call seperate shell scripts**<br/>
 Usefull to breakup tasks and make it easy to switch between use cases
+
 ```ruby
   # Demonstrate using external shell scripts for post bringup configuration
   config.vm.provision :shell, :path => "config/bootstrap.sh"
@@ -188,21 +196,22 @@ Usefull to breakup tasks and make it easy to switch between use cases
 These aren't used in this Vagrantfile but included here for documentation<br\>
 If you are calling these in a loop (see MultiServer/Ceph environments) you need to explicitly "end" the call<br\>
 Also note the path - you can use relative/absolute paths pointing to a set of common scripts  
+
 ```ruby
 ### External shell scripts for configuration
 # - Run on every node
 config.vm.provision "bootstrap", type: "shell" do |script|
    script.path = "../../scripts/bash/config/bootstrap.sh"
 end
-      
+
 # Role based setup is in the servers.yml file - pull it out as a key:value
 config.vm.provision "Role", type: "shell" do |script|
    script.path = "../../scripts/bash/ceph/#{servers["script"]}"
 end
 ```
 
-
 **Close out "configure(2)"**
+
 ```ruby
 end ###--- End configure(2) - this wraps up the wholething - like main()
 ```

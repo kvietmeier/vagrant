@@ -32,6 +32,8 @@ Vagrant.configure(2) do |config|
   config.proxy.enabled = false
 
   config.vm.provider "virtualbox" do |vb|
+   vb.name = "clear"
+   vb.cpus = "1"
    vb.memory = "512"
   end # end Provider
 
