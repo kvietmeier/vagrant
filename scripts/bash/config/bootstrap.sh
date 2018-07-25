@@ -68,7 +68,6 @@ yum install -y openssh-server sshpass yum-plugin-priorities > /dev/null 2>&1
 # Update the man pages
 catman > /dev/null 2>&1
 
-
 ###--- Create/modify an additional user account
 # NOTE - may want to customize the users shell
 echo "###--- Adding a User"
@@ -150,3 +149,5 @@ if $(systemctl is-active --quiet ntpd)
 fi
 
 ###--- End NTP
+
+###=================================================  End bootstrap.sh  =================================================###

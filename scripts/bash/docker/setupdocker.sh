@@ -3,7 +3,7 @@
 ### Install and configure Docker
 
 # Install container bundle
-yum install docker -y
+yum install docker -y > /dev/null 2>&1
 
 # Start and enable Docker services
 systemctl enable docker
