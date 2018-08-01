@@ -3,7 +3,7 @@
 # Simple Vangrantfile
 # Created By: Karl Vietmeier
 
-### Add networking and VM configuration
+### Add networking and VM configuration - making it more usable
 
 # Specify minimum Vagrant version and Vagrant API version
 Vagrant.require_version ">= 1.6.0"

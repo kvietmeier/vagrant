@@ -2,6 +2,8 @@
 # # vi: set ft=ruby :
 # Simple Vangrantfile
 # Created By: Karl Vietmeier
+
+###- Give the VM a useful name.
  
 # Specify minimum Vagrant version and Vagrant API version
 Vagrant.require_version ">= 1.6.0"
