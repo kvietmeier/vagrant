@@ -6,28 +6,28 @@ VMware Workstation is TBD
 
 **NOTE - All of these examples are built/run using Windows 10 "Holiday Edition" and PowerShell.**
 
-Powershell wrapper function for git
-
-~~~powershell
-function gpush {
-    Param($arg) 
-    git add -A; git commit -m $arg; git push origin master
-}
-~~~
-
 ## Getting Started
 
-You need these:
+You will need at least these 2 utilities:
 
 * [Vagrant](https://www.vagrantup.com/ - Grab the Windows 64bit version
 * [VirtualBox] (https://www.virtualbox.org/wiki/Downloads) - No explanation needed
 
-## Prerequisites
+## Customize your workspace to make things easier and get a good IDE/text editor
 
 There are many tutorials out there on getting Virtualbox and Vagrant installed so I won't try to replicate them here but there are some things I highly recommend you setup and configure on your laptop.
 
 * [ConEmu](https://conemu.github.io/) - Windows terminal replacement can be configured to give "iterm like" functionality
 * [Visual Studio Code](https://code.visualstudio.com/) - Free and lightweight version of Visual Studio
+
+Powershell wrapper function for git:
+
+~~~powershell
+function gpush {
+    Param($message)
+    git add -A; git commit -m $message; git push origin master
+}
+~~~
 
 ### Author
 
