@@ -6,12 +6,21 @@ VMware Workstation is TBD
 
 **NOTE - All of these examples are built/run using Windows 10 "Holiday Edition" and PowerShell.**
 
+Powershell wrapper function for git
+
+~~~powershell
+function gpush {
+    Param($arg) 
+    git add -A; git commit -m $arg; git push origin master
+}
+~~~
+
 ## Getting Started
 
 You need these:
+
 * [Vagrant](https://www.vagrantup.com/ - Grab the Windows 64bit version
 * [VirtualBox] (https://www.virtualbox.org/wiki/Downloads) - No explanation needed
-
 
 ## Prerequisites
 
@@ -22,7 +31,7 @@ There are many tutorials out there on getting Virtualbox and Vagrant installed s
 
 ### Author
 
-* **Karl Vietmeier** 
+* **Karl Vietmeier**
 
 ### Acknowledgments
 
