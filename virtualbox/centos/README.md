@@ -8,19 +8,18 @@ Configuration Tasks:
 * Create private networks and interfaces
 * Port forwarding
 * Set the VM names:
-    * Hostname in guest OS
-    * Name in Virtualbox
-    * Name for Vagrant
+  * Hostname in guest OS
+  * Name in Virtualbox
+  * Name for Vagrant
 * Configfure VM
-    * Memory/CPU
-    * HW devices (audio/USB)
-    * Add additional disks (TBD)
+  * Memory/CPU
+  * HW devices (audio/USB)
+  * Add additional disks (TBD)
 * Shell provisioner - inline and external script
 
 <HR>
 **Vagrantfile Walkthrough**
 <HR>
-
 
 **Header with comments - Vagrantfile is using Ruby:**<br/>
 The first 2 lines aren't strictly required but are a good practice 
