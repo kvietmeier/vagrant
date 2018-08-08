@@ -89,9 +89,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       end # vm.provider
 
-      ###-------- Provisioner Section ---------###
-      ### We want to add the local user's public key to .ssh/authorized_keys 
-      ### and get a working /etc/hosts
+      ###-----------------------------------------------------------------------------------###
+      ###-------------------           Provisioner Section               -------------------###
+      ###-----------------------------------------------------------------------------------###
+      ### Uses a combination of inline shell, file, and external shell scripts
+      ### NOTE - You need to explicitely name each provisioner or it will run once for every
+      ###        loop iteration
+      
+      # INLINE
+      # Add the host system user's public key to .ssh/authorized_keys for root and vagrant users
+      # - should move this to a script file but it is here as an example of an inline script
       config.vm.provision "Setup shell environment", type: "shell" do |s|
         s.inline = <<-SHELL
           # Install some tools
@@ -113,7 +120,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end # inline shell provisioner config.provision
       
       # Copy in the hosts file
-      config.vm.provision :file do |file|
+      config.vm.provision "Copy /etc/hosts", type: "file" do |file|
          file.source = "../../scripts/env/hosts" 
          file.destination =  "~/hosts"
       end  
@@ -143,10 +150,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       #  end 
       #end
 
-      ###---- End Provisioning
+      ###--------------------- End Provisioning
 
     end  # config.vm.define
-  end  #servers.each
+  end  # servers.each
 end  # Vagrant.configure
 
 
