@@ -59,7 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
 
         ###-------- Disk setup ---------###
-        ## Check the hostmame - only add extra drives to the OSD nodes, not admin or mons.
+        ## Check the hostmame - only add extra drives to the OSD nodes, not admin or clients.
         if ("#{servers["name"]}").include? "osd"
         
           # Loop and create/attach the OSD disks
@@ -141,15 +141,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          script.path = "../../scripts/bash/ceph/#{servers["script"]}"
       end
       
-      # Example - inline code placeholder
-      #if ("#{servers["name"]}").include? "osd"
-      #  config.vm.provision "Setup shell environment", type: "shell" do |s|
-      #    s.inline = <<-SHELL
-      #     echo "Provision Every Node"
-      #    SHELL
-      #  end 
-      #end
-
       ###--------------------- End Provisioning
 
     end  # config.vm.define
