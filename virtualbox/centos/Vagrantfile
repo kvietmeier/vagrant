@@ -86,8 +86,13 @@ Vagrant.configure(2) do |config|
   ###-----------------------------------------------------------------------------------###
   ###-------------------           Provisioner Section               -------------------###
   ###-----------------------------------------------------------------------------------###
+  ### Uses a combination of inline shell, file, and external shell scripts
+  ### NOTE - You need to explicitely name each provisioner or it will run once for every
+  ###        iteration
 
-  # Using the inline Shell provisioner to run bash shell commands
+  # INLINE
+  # Add the host system user's public key to .ssh/authorized_keys for root and vagrant users
+  # - could move this to a script file but it is here as an example of an inline script
   config.vm.provision "Setup shell environment", type: "shell" do |s|
     s.inline = <<-SHELL
     # Add the public keys "adminvm" is a VM I use for testing things like Ansible
@@ -106,14 +111,19 @@ Vagrant.configure(2) do |config|
     SHELL
   end #--- End inline Provisioner
   
+  ### Type=file
   # Copy in the hosts file
   config.vm.provision "Copy /etc/hosts", type: "file" do |file|
     file.source = "../../scripts/env/hosts" 
     file.destination =  "~/hosts"
   end  
 
-  ### Demonstrate using external shell scripts one sets up nginx, the other does basic bootstrap tasks 
-  # Scripts are located under the the top level Vagrant folder I use so I can share them
+  ### Demonstrate using external shell scripts 
+  #   Scripts are located under the the top level Vagrant folder I use so I can share them
+  #   * basic bootstrap tasks 
+  #   * nginx
+  #   * docker
+  
   # - Run on every node
   config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
      script.path = "../../scripts/bash/config/bootstrap.sh"
@@ -132,7 +142,7 @@ Vagrant.configure(2) do |config|
   # Requires vagrant-reload plugin
   # https://github.com/aidanns/vagrant-reload/blob/master/README.md
 
-  # Isn't working - causes a reconfiguration - not just as reboot
+  # Isn't working - causes a reconfiguration - not just a reboot
 
   #config.vm.provision "Setup shell environment", type: "shell" do |s|
   #  s.inline = <<-SHELL

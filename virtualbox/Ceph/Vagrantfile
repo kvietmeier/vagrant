@@ -44,8 +44,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       # VM parameters
       srv.vm.provider :virtualbox do |vb|
-        #puts "Provider - - - - - - - - "
-        #puts servers["name"]
+        # Create a group in Virtualbox
+        vb.customize ["modifyvm", :id, "--groups", "/Ceph" ]
+        
+        # Basic VM config - modify in servers.yml
         vb.name = servers["name"]
         vb.memory = servers["ram"]
         vb.cpus = servers["cpus"]
