@@ -121,7 +121,7 @@ We define the Provider specific options - in this case VirtualBox.  This include
 
 1. Create/add the SATA controller to the Guest
 2. Create the disk file - good practice to see if it already exists
-3. Attach the disk to a port on the controller - the name is important
+3. Attach the disk to a port on the controller - the name for --storagectl is important
 
 ```ruby
 
@@ -143,8 +143,8 @@ We define the Provider specific options - in this case VirtualBox.  This include
 **End Provider**
 
 **Provisioner: Using shell provisioner**<br/>
-A basic box isn't terribly useful. Here we do things like copy in host keys for SSH and install some basic packages that most boxes are missing. <br/>
-We also do a bad thing - disable SElinux. <br/>
+A basic box isn't terribly useful. The Provisioner does post install tasks like copy in host keys for SSH, install basic packages that most boxes are missing and install applications. <br/>
+This example is using the Shell Provisioner - bash, you could also use Puppet, Chef, or Ansible<br/>
 I moved most of this to a "bootstrap" script but leave it here as an example<br/>
 ToDo:
 
@@ -154,20 +154,18 @@ ToDo:
 4. Script setting up disks inside guest
 
 ```ruby
-  ###------- Provisioner section - this is where you customize the guest OS.
-  ### This example is using the Shell provisioner
+  ###------- Provisioner section - this is where you customize the guest OS. --------###
+  # Uses a combination of inline shell, file, and external shell scripts
+  # NOTE - You need to explicitely name each provisioner or it will run once for every
+  #        iteration of a loop in a multi-machine setting 
+  # This example is using the Shell provisioner
+  
+  # INLINE
+  # Add the host system user's public key to .ssh/authorized_keys for root and vagrant users
+  # - could move this to a script file but it is here as an example of an inline script
   config.vm.provision "Setup shell environment", type: "shell" do |s|
     s.inline = <<-SHELL
     ### Run standard bash commands using an "inline" script
-
-    # Install some useful tools and update the system
-    yum install -y net-tools traceroute git ansible gcc make python policycoreutils-python > /dev/null 2>&1
-    yum install -y docker > /dev/null 2>&1 
-    #yum update -y > /dev/null 2>&1
-
-    # Disable SElinux - generally not a good idea but needed foir nginx for now
-    sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
-    setenforce 0
 
     # Add the public keys "adminvm" is a VM I use for testing things like Ansible
     mkdir /root/.ssh
@@ -188,35 +186,50 @@ ToDo:
   end ###--- End Provisioner
 ```
 
-**Provisioner: Call seperate shell scripts**<br/>
-Useful to breakup tasks and make it easy to switch between use cases - works for single machine.
+**Provisioners: Call seperate shell scriptsi and copy files**<br/>
+Useful to breakup tasks and make it easy to switch between use cases.
 
 ```ruby
-  # Demonstrate using external shell scripts for post bringup configuration
-  config.vm.provision :shell, :path => "config/bootstrap.sh"
-  config.vm.provision :shell, :path => "docker/setupdocker.sh"
-  config.vm.provision :shell, :path => "nginx/setupnginx.sh"
+  ### Type=file
+  # Copy in the hosts file
+  config.vm.provision "Copy /etc/hosts", type: "file" do |file|
+    file.source = "../../scripts/env/hosts"
+    file.destination =  "~/hosts"
+  end  
+
 ```
 
-**Provisioner: Alternative forms for calling an external scripts**<br/>
+**Provisioner: Calling External Scripts**<br/>
 If you are calling these in a loop (see MultiServer/Ceph environments) you need to explicitly "end" the call<br/>
 Also note the path - you can use relative/absolute paths pointing to a set of common scripts  
 
 ```ruby
-### External shell scripts for configuration
-# - Run on every node
+### Demonstrate using external shell scripts
+#   Scripts are located under the the top level Vagrant folder I use so I can share them
+#   * basic bootstrap tasks
+#   * nginx
+#   * docker
+  
+# A standard "bootstrap" script to configure a Linux server
 config.vm.provision "bootstrap", type: "shell" do |script|
    script.path = "../../scripts/bash/config/bootstrap.sh"
 end
 
-# Role based setup is in the servers.yml file - pull it out as a key:value
-config.vm.provision "Role", type: "shell" do |script|
-   script.path = "../../scripts/bash/ceph/#{servers["script"]}"
+# Install/configure nginx
+config.vm.provision "Setup nginx", type: "shell" do |script|
+   script.path = "../../scripts/bash/nginx/setupnginx.sh"
+end
+
+# Install/configure Docker
+config.vm.provision "Install Docker", type: "shell" do |script|
+   script.path = "../../scripts/bash/docker/setupdocker.sh"
 end
 ```
 
 **Close out "configure(2)"**
 
 ```ruby
+
 end ###--- End configure(2) - this wraps up the whole thing - like main()
+
 ```

@@ -8,6 +8,7 @@ The projects build from the most basic, "simplevm", to more complex setups.<br/>
 3. **MultiDisk:** A single-machine example attaching multple drives to the guest.
 4. **MultiServer:** A multi-machine example using a sourced yaml definition filea - could be used for a Kubernetes cluster.
 5. **Ceph:** A multi-machine, multi-disk example with shell provisioners to do the Ceph "pre-flight".
+6. **ClearLinux** Anm Intel ClearLinux environment
 
 **Projects:**
 
@@ -60,4 +61,3 @@ The projects build from the most basic, "simplevm", to more complex setups.<br/>
       └───ubuntu
             |
             Ubuntu, not active
-            
