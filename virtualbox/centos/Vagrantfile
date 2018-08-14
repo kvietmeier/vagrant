@@ -69,18 +69,32 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--usb", "off" ]
 
     ###------- Add an additional disk
-    # Add SATA controller - you can only have one
-    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
-    #vb.customize ['storagectl', :id, '--name',  'NVME Controller', '--add', 'pcie',  '--controller', 'NVMe', '--portcount', 6]
+    #-- SATA
+    #-- Add controller - you can only have one
+    #vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
 
-    # Create OSD drive/s 
-    unless File.exist?("Disk-01.vdi")
-      vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
-    end  # End create disk
+    # Create drive/s 
+    #unless File.exist?("Disk-01.vdi")
+    #  vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
+    #end  # End create disk
 
     # Attach the drive to the controller
-    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
-    #vb.customize [ 'storageattach', :id, '--storagectl', 'NVME Controller', '--port', "3", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+    #vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+
+    #-- NVME
+    # Add controller - you can only have one
+    vb.customize ["storagectl", :id, "--name", "nvme", "--add", "pcie", "--controller", "NVMe", "--portcount", "1", "--bootable", "off"]
+
+    # Create drive/s 
+    nvme_disk = 'nvme.vdi'
+    unless File.exist? (nvme_disk)
+      vb.customize ["createhd", "--filename", nvme_disk, "--variant", "Fixed", "--size", "1024"]
+    end
+
+    # Attach the drive to the controller
+    vb.customize ["storageattach", :id, "--storagectl", "nvme", "--type", "hdd", "--medium", nvme_disk, "--port", "0"]
+
+    ###--- End Disks
 
   end ###--- End Provider
 
@@ -89,7 +103,7 @@ Vagrant.configure(2) do |config|
   ###-----------------------------------------------------------------------------------###
   ### Uses a combination of inline shell, file, and external shell scripts
   ### NOTE - You need to explicitely name each provisioner or it will run once for every
-  ###        iteration
+  ###        iteration of a loop in a multi-machine setting 
 
   # INLINE
   # Add the host system user's public key to .ssh/authorized_keys for root and vagrant users
@@ -126,17 +140,17 @@ Vagrant.configure(2) do |config|
   #   * docker
   
   # - Run on every node
-  config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
-     script.path = "../../scripts/bash/config/bootstrap.sh"
-  end
+  #config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
+  #   script.path = "../../scripts/bash/config/bootstrap.sh"
+  #end
 
   #config.vm.provision "Setup nginx", type: "shell" do |script|
   #   script.path = "../../scripts/bash/nginx/setupnginx.sh"
   #end
 
-  config.vm.provision "Install Docker", type: "shell" do |script|
-     script.path = "../../scripts/bash/docker/setupdocker.sh"
-  end
+  #config.vm.provision "Install Docker", type: "shell" do |script|
+  #   script.path = "../../scripts/bash/docker/setupdocker.sh"
+  #end
 
 
   ### Example of a Reboot in the middle of provisioning (not working)
