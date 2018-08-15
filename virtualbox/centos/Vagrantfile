@@ -140,9 +140,14 @@ Vagrant.configure(2) do |config|
   #   * docker
   
   # - Run on every node
-  #config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
-  #   script.path = "../../scripts/bash/config/bootstrap.sh"
-  #end
+  config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
+     script.path = "../../scripts/bash/config/bootstrap.sh"
+  end
+
+  config.vm.provision "Install SPDK", type: "shell" do |script|
+     script.path = "../../scripts/bash/config/spdk.sh"
+  end
+
 
   #config.vm.provision "Setup nginx", type: "shell" do |script|
   #   script.path = "../../scripts/bash/nginx/setupnginx.sh"
