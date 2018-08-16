@@ -14,16 +14,12 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 Vagrant.configure(2) do |config|
   config.vm.box = "AntonioMeireles/ClearLinux"
   # Trying different versions
-  #config.vm.box_version = "21570"
-  #config.vm.box_version = "22880"
-  #config.vm.box_version = "23090"
+  #config.vm.box_version = "<version>"
   config.vm.define "clearlinux"
   config.vm.hostname = "clearlinux"
 
   config.vm.usable_port_range= 2800..2900
   # [--nictype<1-N> Am79C970A|Am79C973| 82540EM|82543GC|82545EM| virtio] 
-  #config.vm.network "private_network", ip: "172.16.0.202", nic_type: "Am79C970A"
-  #config.vm.network "private_network", ip: "172.16.0.202", nic_type: "virtio"
   # nic_type doesn't matter
   config.vm.network "private_network", ip: "172.16.0.202"
   config.vm.network "private_network", ip: "172.10.0.202"
