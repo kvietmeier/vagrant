@@ -49,6 +49,7 @@ Vagrant.configure("2") do |config|
     echo "-------------------------------"
     echo "Registering with Red Hat Portal"
     echo "-------------------------------"
+    # Need to move these to a yaml dictionary - works for now
     subscription-manager register --username #{rht_user} --password #{rht_pass}
     subscription-manager attach --pool=8a85f98b651a7ece0165255a7d31267d > /dev/null 2>&1
     subscription-manager repos --disable=* > /dev/null 2>&1
@@ -62,23 +63,23 @@ Vagrant.configure("2") do |config|
 
   ###------------------------------   Triggers   -------------------------------###
   # Use Triggers - Cleanup RHEL subscription before destroy - needs work - first try
-  config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 1 - unattach pools"
-    trigger.info = "Unattach PoolIDs"
-    trigger.run_remote = {inline: "subscription-manager remove --all"}
-  end
+  #config.trigger.before :destroy do |trigger|
+  #  trigger.name = "Unregister RHN Guest"
+  #  trigger.info = "Unregister"
+  #  trigger.run_remote = {inline: "subscription-manager remove --all && subscription-manager unregister; subscription-manager clean"}
+  #end
 
   config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 2 - unregister"
-    trigger.info = "Unregister VM"
-    trigger.run_remote = {inline: "subscription-manager unregister"}
+    trigger.name = "Unregister RHN Guest"
+    trigger.info = "Unregister"
+    trigger.run_remote = {inline: "<<-SHELL
+    subscription-manager remove --all
+    subscription-manager unregister
+    subscription-manager clean
+  SHELL
+    "}
   end
 
-  config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 3 - clean up"
-    trigger.info = "Clean up after itself"
-    trigger.run_remote = {inline: "subscription-manager clean"}
-  end
   ###--- End Triggers
 
 end # End Main
