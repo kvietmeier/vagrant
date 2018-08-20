@@ -19,10 +19,10 @@ rht_user = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_user
 ###================================================   Main   ==================================================###
 Vagrant.configure("2") do |config|
 
-  # Use a RHEL Box
+  # Use RHEL Box
   config.vm.box = "generic/rhel7"
 
-  ### - need to put lots of stuff here -  everything in Centos should work
+  ### - need to put lots of stuff here - 
 
 
   ###------------------------------   Provisioning   -------------------------------###
@@ -63,19 +63,19 @@ Vagrant.configure("2") do |config|
   ###------------------------------   Triggers   -------------------------------###
   # Use Triggers - Cleanup RHEL subscription before destroy - needs work - first try
   config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 1"
+    trigger.name = "Unregister Guest 1 - unattach pools"
     trigger.info = "Unattach PoolIDs"
     trigger.run_remote = {inline: "subscription-manager remove --all"}
   end
 
   config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 2"
+    trigger.name = "Unregister Guest 2 - unregister"
     trigger.info = "Unregister VM"
     trigger.run_remote = {inline: "subscription-manager unregister"}
   end
 
   config.trigger.before :destroy do |trigger|
-    trigger.name = "Unregister Guest 3"
+    trigger.name = "Unregister Guest 3 - clean up"
     trigger.info = "Clean up after itself"
     trigger.run_remote = {inline: "subscription-manager clean"}
   end
