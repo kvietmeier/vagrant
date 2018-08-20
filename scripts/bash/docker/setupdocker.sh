@@ -3,15 +3,15 @@
 ### Install and configure Docker
 
 # Install latest docker-ce from the Docker repo (versions in the standard repos are old)
-#yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-#yum-config-manager --enable docker-ce-edge
-#yum install -y docker-ce
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --enable docker-ce-edge
+yum install -y docker-ce
 #yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo > /dev/null 2>&1
 #yum-config-manager --enable docker-ce-edge > /dev/null 2>&1
 #yum install -y docker-ce > /dev/null 2>&1
 
 # Install Docker from the epel repo
-yum install docker -y
+#yum install docker -y
 
 
 # Enable the vagrant user to run Docker commands

@@ -1,0 +1,84 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+# RHEL Vagrantfile using triggers to unregister VM.
+# Created By: Karl Vietmeier
+
+# Specify minimum Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+
+### Set some variables
+# Path to the local users public key file in $HOME/.ssh
+# We use it later in the shell provisioner to populate authorized_keys
+ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
+adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+rht_pass = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_password.txt").first.strip
+rht_user = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_user.txt").first.strip
+
+###================================================   Main   ==================================================###
+Vagrant.configure("2") do |config|
+
+  # Use a RHEL Box
+  config.vm.box = "generic/rhel7"
+
+  ### - need to put lots of stuff here -  everything in Centos should work
+
+
+  ###------------------------------   Provisioning   -------------------------------###
+  config.vm.provision "Setup shell environment", type: "shell" do |s|
+    s.inline = <<-SHELL
+
+    # Add the public keys "adminvm" is a VM I use for testing things like Ansible
+    # Clearlinux box doesn't havre a vagrant user - the user is "clear"
+    mkdir /root/.ssh
+    chmod 700 /root/.ssh
+    touch /root/.ssh/authorized_keys
+   
+    echo "Appending user@Laptop keys to root and vagrant authorized_keys"
+    echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+    echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+   
+    echo "Appending AdminVM keys to root and vagrant authorized_keys"
+    echo #{adminvm_karlvkey} >> /home/vagrant/.ssh/authorized_keys
+    echo #{adminvm_karlvkey} >> /root/.ssh/authorized_keys
+    echo #{adminvm_rootkey} >> /home/vagrant/.ssh/authorized_keys
+    echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
+
+    # Register with RHN
+    echo "-------------------------------"
+    echo "Registering with Red Hat Portal"
+    echo "-------------------------------"
+    subscription-manager register --username #{rht_user} --password #{rht_pass}
+    subscription-manager attach --pool=8a85f98b651a7ece0165255a7d31267d > /dev/null 2>&1
+    subscription-manager repos --disable=* > /dev/null 2>&1
+    rm -fr /var/cache/yum/*
+    yum clean all > /dev/null 2>&1
+    subscription-manager repos --enable=rhel-7-server-rpms > /dev/null 2>&1
+    subscription-manager repos --enable=rhel-7-server-supplementary-rpms > /dev/null 2>&1
+
+    SHELL
+  end ###--- End Inline Provisioner
+
+  ###------------------------------   Triggers   -------------------------------###
+  # Use Triggers - Cleanup RHEL subscription before destroy - needs work - first try
+  config.trigger.before :destroy do |trigger|
+    trigger.name = "Unregister Guest 1"
+    trigger.info = "Unattach PoolIDs"
+    trigger.run_remote = {inline: "subscription-manager remove --all"}
+  end
+
+  config.trigger.before :destroy do |trigger|
+    trigger.name = "Unregister Guest 2"
+    trigger.info = "Unregister VM"
+    trigger.run_remote = {inline: "subscription-manager unregister"}
+  end
+
+  config.trigger.before :destroy do |trigger|
+    trigger.name = "Unregister Guest 3"
+    trigger.info = "Clean up after itself"
+    trigger.run_remote = {inline: "subscription-manager clean"}
+  end
+  ###--- End Triggers
+
+end # End Main

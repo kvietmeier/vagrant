@@ -70,7 +70,7 @@ catman > /dev/null 2>&1
 
 ###--- Create/modify an additional user account
 # NOTE - may want to customize the users shell
-echo "###--- Adding a User"
+echo "###--- Adding labuser1"
 useradd -d /home/labuser1 -m labuser1 
 chown labuser1:labuser1 /home/labuser1/
 passwd -d labuser1
