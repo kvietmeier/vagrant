@@ -1,6 +1,7 @@
 #!/bin/bash
 # Created by:  Karl Vietmeier
 ### Install and configure Docker
+# Still testing proxies
 
 # Install latest docker-ce from the Docker repo (versions in the standard repos are old)
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -24,11 +25,11 @@ usermod -aG docker labuser1
 #vi /etc/systemd/system/docker.service.d/http-proxy.conf
 
 #[Service]
-#Environment="HTTP_PROXY=http://proxy-chain.intel.com:911"
+#Environment="HTTP_PROXY=http://proxy"
 
 #vi /etc/systemd/system/docker.service.d/https-proxy.conf
 #[Service]
-#Environment="HTTPS_PROXY=https://proxy-chain.intel.com:912"
+#Environment="HTTPS_PROXY=https://proxy"
 
 # Start and enable Docker services
 systemctl enable docker

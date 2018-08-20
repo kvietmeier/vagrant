@@ -1,10 +1,11 @@
 #!/bin/bash
 # Created by:  Karl Vietmeier
-# Basic system setup
+# Basic system setup for most applications
 #  Could move most of the inline shell provisioner in here but leaving it in the main Vagrantfile
 #  as an example.
 # NOTE - using redirect to /dev/null with yum to limit output so you won't see any errors
 # Script runs as root in the guest
+# Do some bad stuff like disable selinux.
 
 
 echo ""
