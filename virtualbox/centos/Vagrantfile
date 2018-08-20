@@ -71,15 +71,15 @@ Vagrant.configure(2) do |config|
     ###------- Add Disks -------###
     #-- SATA
     #-- Add controller - you can only have one
-    #vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+    vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
 
     # Create drive/s 
-    #unless File.exist?("Disk-01.vdi")
-    #  vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
-    #end  # End create disk
+    unless File.exist?("Disk-01.vdi")
+      vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
+    end  # End create disk
 
     # Attach the drive to the controller
-    #vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
+    vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "2", '--device', 0, '--type', 'hdd', '--medium', "./Disk-01.vdi"]
 
     #-- NVME
     # Add controller - you can only have one
