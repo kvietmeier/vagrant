@@ -13,6 +13,7 @@ adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/a
 
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
+  #config.vm.box = "generic/rhel7"
 
   # Set the VM OS level Hostname
   config.vm.hostname = "centos"
@@ -78,7 +79,7 @@ Vagrant.configure(2) do |config|
     # Create drive/s 
     sata_disk = 'SATA-Disk.vdi'
     unless File.exist? (sata_disk)
-      vb.customize ['createhd', '--filename', "Disk-01.vdi", '--size', 512]
+      vb.customize ['createhd', '--filename', sata_disk, '--size', "512"]
     end  # End create disk
 
     # Attach the drive to the controller
@@ -92,7 +93,7 @@ Vagrant.configure(2) do |config|
     # Create drive/s 
     nvme_disk = 'NVMe-Disk.vdi'
     unless File.exist? (nvme_disk)
-      vb.customize ["createhd", "--filename", nvme_disk, "--variant", "Fixed", "--size", "1024"]
+      vb.customize ["createhd", "--filename", nvme_disk, "--variant", "Fixed", "--size", "512"]
     end
 
     # Attach the drive to the controller
@@ -140,13 +141,14 @@ Vagrant.configure(2) do |config|
 
   ### Demonstrate using external shell scripts 
   #   Scripts are located under the the top level Vagrant folder I use so I can share them
-  #   * basic bootstrap tasks 
+  #   * Basic Bootstrap Tasks 
+  #   * spdk
   #   * nginx
   #   * docker
   
   # Bootstrap - Run on every node
   config.vm.provision "Basic Setup - bootstrap a node", type: "shell" do |script|
-     script.path = "../../scripts/bash/config/bootstrap.sh"
+    script.path = "../../scripts/bash/config/bootstrap.sh"
   end
 
   # SPDK
@@ -160,9 +162,9 @@ Vagrant.configure(2) do |config|
   #end
   
   # Docker
-  config.vm.provision "Install Docker", type: "shell" do |script|
-    script.path = "../../scripts/bash/docker/setupdocker.sh"
-  end
+  #config.vm.provision "Install Docker", type: "shell" do |script|
+  #  script.path = "../../scripts/bash/docker/setupdocker.sh"
+  #end
 
 
   ### Example of a Reboot in the middle of provisioning (not working)

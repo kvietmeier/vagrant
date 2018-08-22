@@ -7,6 +7,12 @@
 Vagrant.require_version ">= 1.6.0"
 VAGRANTFILE_API_VERSION = "2"
 
+# Require YAML module
+require 'yaml'
+ 
+# Read YAML file with multi-machine node configurations
+rht_creds = YAML.load_file("#{Dir.home}/Documents/Projects/vagrant/certs/rht.yml")
+
 ### Set some variables
 # Path to the local users public key file in $HOME/.ssh
 # We use it later in the shell provisioner to populate authorized_keys
@@ -15,6 +21,7 @@ adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
 rht_pass = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_password.txt").first.strip
 rht_user = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_user.txt").first.strip
+
 
 ###================================================   Main   ==================================================###
 Vagrant.configure("2") do |config|
@@ -46,39 +53,42 @@ Vagrant.configure("2") do |config|
     echo #{adminvm_rootkey} >> /root/.ssh/authorized_keys
 
     # Register with RHN
-    echo "-------------------------------"
-    echo "Registering with Red Hat Portal"
-    echo "-------------------------------"
-    # Need to move these to a yaml dictionary - works for now
-    subscription-manager register --username #{rht_user} --password #{rht_pass}
-    subscription-manager attach --pool=8a85f98b651a7ece0165255a7d31267d > /dev/null 2>&1
+    echo "-----------------------------------"
+    echo "  Registering with Red Hat Portal"
+    echo "-----------------------------------"
+    # Credentials stored elsewhere - not pushed to github reference the rht_creds hash
+    subscription-manager register --username #{rht_creds["user"]} --password #{rht_creds["pass"]}
+    subscription-manager attach --pool=#{rht_creds["rhel_pool"]} > /dev/null 2>&1
     subscription-manager repos --disable=* > /dev/null 2>&1
     rm -fr /var/cache/yum/*
     yum clean all > /dev/null 2>&1
-    subscription-manager repos --enable=rhel-7-server-rpms > /dev/null 2>&1
-    subscription-manager repos --enable=rhel-7-server-supplementary-rpms > /dev/null 2>&1
+    subscription-manager repos --enable=#{rht_creds["rhel7_repo"]} > /dev/null 2>&1
+    subscription-manager repos --enable=#{rht_creds["rhel7_supp_repo"]} > /dev/null 2>&1
 
     SHELL
   end ###--- End Inline Provisioner
 
-  ###------------------------------   Triggers   -------------------------------###
-  # Use Triggers - Cleanup RHEL subscription before destroy - needs work - first try
-  #config.trigger.before :destroy do |trigger|
-  #  trigger.name = "Unregister RHN Guest"
-  #  trigger.info = "Unregister"
-  #  trigger.run_remote = {inline: "subscription-manager remove --all && subscription-manager unregister; subscription-manager clean"}
-  #end
+  #{servers["name"]}-OS
 
+  ###------------------------------   Triggers   -------------------------------###
+  # Use Triggers - Cleanup RHEL subscription before destroy  - this works.
   config.trigger.before :destroy do |trigger|
     trigger.name = "Unregister RHN Guest"
     trigger.info = "Unregister"
-    trigger.run_remote = {inline: "<<-SHELL
-    subscription-manager remove --all
-    subscription-manager unregister
-    subscription-manager clean
-  SHELL
-    "}
+    trigger.run_remote = {inline: "subscription-manager remove --all && subscription-manager unregister; subscription-manager clean"}
   end
+
+  # This one is broken opened Issue on it
+  #config.trigger.before :destroy do |trigger|
+  #  trigger.name = "Unregister RHN Guest"
+  #  trigger.info = "Unregister"
+  #  trigger.run_remote = {inline: "<<-SHELL
+  #  subscription-manager remove --all
+  #  subscription-manager unregister
+  #  subscription-manager clean
+  #  SHELL
+  #  "}
+  #end
 
   ###--- End Triggers
 
