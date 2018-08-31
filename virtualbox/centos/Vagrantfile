@@ -162,9 +162,9 @@ Vagrant.configure(2) do |config|
   #end
   
   # Docker
-  #config.vm.provision "Install Docker", type: "shell" do |script|
-  #  script.path = "../../scripts/bash/docker/setupdocker.sh"
-  #end
+  config.vm.provision "Install Docker", type: "shell" do |script|
+   script.path = "../../scripts/bash/docker/setupdocker.sh"
+  end
 
 
   ### Example of a Reboot in the middle of provisioning (not working)
