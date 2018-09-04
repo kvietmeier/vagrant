@@ -19,7 +19,9 @@ yum install -y docker-ce
 usermod -aG docker vagrant
 usermod -aG docker labuser1
 
-# To fix proxxy issue
+### Needed for docker-ce - Vagrant doesn't set this right
+#  Need to script this- use HERE doc?
+# To fix proxy issue
 #mkdir /etc/systemd/system/docker.service.d
 
 #vi /etc/systemd/system/docker.service.d/http-proxy.conf
