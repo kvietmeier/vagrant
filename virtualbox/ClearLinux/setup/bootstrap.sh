@@ -39,10 +39,10 @@ sudo tee -a /root/.bashrc << EOF > /dev/null 2>&1
 
 ### Add some lines to bashrc
 # Set the prompt
-export PS1="\u@\h:\Wr#> \[$(tput sgr0)\]"
+export PS1="\u@\h:\Wr#> ]"
 
 # Some aliases
-alias ls='ls --color=never'
+#alias ls='ls --color=never'
 alias ll="ls -lhA"
 alias la="ls -A"
 alias cd..="cd .."
@@ -54,10 +54,10 @@ sudo tee -a /home/clear/.bashrc << EOF > /dev/null 2>&1
 
 ### Add some lines to bashrc
 # Set the prompt
-export PS1="\u@\h:\W> \[$(tput sgr0)\]"
+export PS1="\u@\h:\W> ]"
 
 # Some aliases
-alias ls='ls --color=never'
+#alias ls='ls --color=never'
 alias ll="ls -lhA"
 alias la="ls -A"
 alias cd..="cd .."

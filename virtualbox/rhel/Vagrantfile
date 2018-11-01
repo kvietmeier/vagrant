@@ -19,6 +19,8 @@ rht_creds = YAML.load_file("#{Dir.home}/Documents/Projects/vagrant/certs/rht.yml
 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
 adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
 adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+
+# Red Hat Credentials
 rht_pass = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_password.txt").first.strip
 rht_user = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/rht_user.txt").first.strip
 
@@ -37,7 +39,6 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SHELL
 
     # Add the public keys "adminvm" is a VM I use for testing things like Ansible
-    # Clearlinux box doesn't havre a vagrant user - the user is "clear"
     mkdir /root/.ssh
     chmod 700 /root/.ssh
     touch /root/.ssh/authorized_keys
