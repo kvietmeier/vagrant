@@ -38,9 +38,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.hostname = servers["name"]
 
       # Network setup
+      srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
       srv.vm.network "private_network", ip: servers["ip1"]
       srv.vm.network "private_network", ip: servers["ip2"]
-      srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
 
       # VM parameters
       srv.vm.provider :virtualbox do |vb|

@@ -19,6 +19,10 @@ servers = YAML.load_file(File.join(File.dirname(__FILE__), 'servers.yml'))
 
 # Define some variables
 ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
+adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+
+# Not used right now
 ssh_user = "vagrant"
 ssh_pass = "vagrant"
 
@@ -33,12 +37,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define servers["name"] do |srv|
       srv.vm.box = servers["box"]
       srv.vm.hostname = servers["name"]
+      srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
       srv.vm.network "private_network", ip: servers["ip1"]
       srv.vm.network "private_network", ip: servers["ip2"]
-      srv.vm.network "forwarded_port", guest: 22, host: servers["port"]
 
       # VM parameters
       srv.vm.provider :virtualbox do |vb|
+        # Create a group in Virtualbox
+        vb.customize ["modifyvm", :id, "--groups", "/DevOps" ]
+        
+        # Basic VM config - modify in servers.yml
         vb.name = servers["name"]
         vb.memory = servers["ram"]
         vb.cpus = servers["cpus"]

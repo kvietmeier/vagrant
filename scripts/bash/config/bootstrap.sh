@@ -58,10 +58,25 @@ fi
 ###--- Install any extra packages
 # Install some useful tools and update the system
 echo "###--- Install some useful utilities"
+pkgs=(epel-release net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli openssh-server sshpass yum-plugin-priorities)
 yum install -y epel-release > /dev/null 2>&1
 yum install -y net-tools pciutils wget screen tree traceroute git gcc make python policycoreutils-python nvme-cli > /dev/null 2>&1 
 echo "###--- Install some additional extra packages" 
-yum install -y openssh-server sshpass yum-plugin-priorities > /dev/null 2>&1
+yum install -y openssh-server dos2unix sshpass yum-plugin-priorities vim-enhanced > /dev/null 2>&1
+
+### This needs work
+#for pkg in  ${pkgs[*]}
+# do
+#  isinstalled=$(yum -q list installed $pkg)
+#  INSTALLED=$?
+#  if [ $INSTALLED -eq 1 ];
+#   then
+#    #echo "Need to install $pkg"
+#    yum install $pkg -y  > /dev/null 2>&1 
+#  else
+#    echo "Package $pkg already installed"
+#  fi
+#done
 
 # Update everything
 #yum update -y 2>&1
