@@ -42,8 +42,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 22, host: 2901
   config.vm.network "forwarded_port", guest: 80, host: 2902
   config.vm.network "forwarded_port", guest: 8080, host: 2903
+  config.vm.network "forwarded_port", guest: 9090, host: 2904
   config.vm.network "forwarded_port", guest: 9000, host: 9000
-  config.vm.network "forwarded_port", guest: 9090, host: 9090
 
   # Need to test this one more
   #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
@@ -152,17 +152,12 @@ Vagrant.configure(2) do |config|
   # Copy files for Prometheus
   config.vm.provision "Copy prometheus.service", type: "file" do |file|
     file.source = "../../scripts/bash/prometheus/prometheus.service" 
-    file.destination =  "~/prometheus.service"
+    file.destination =  "~/prometheus.yml"
   end  
 
   config.vm.provision "Copy prometheus.yml", type: "file" do |file|
     file.source = "../../scripts/bash/prometheus/prometheus.yaml" 
     file.destination =  "~/prometheus.yml"
-  end  
-
-  config.vm.provision "Copy prometheus.sh", type: "file" do |file|
-    file.source = "../../scripts/bash/prometheus/prometheus.sh" 
-    file.destination =  "~/prometheus.sh"
   end  
 
   ### Demonstrate using external shell scripts 
