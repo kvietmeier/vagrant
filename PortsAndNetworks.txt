@@ -26,6 +26,7 @@
 2901  - Centos testing SSH
 2902  - Centos testing Port 80
 2903  - Centos testing Port 8080
+2904  - Centos testing Port 9090 (Prometheus)
 2910  - MultiDisk SSH
 2911  - MultiDisk Port 80
 2912  - MultiDisk Port 8080
@@ -33,7 +34,9 @@
 2921  - ClearLinux Port 80
 2922  - ClearLinux Port 8080
 ......
+General Ports to know for forwarding
 9000  - Minio
+9090  - Prometheus
 
 
 ###-------  Subnets/Networks
