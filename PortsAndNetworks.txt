@@ -1,38 +1,56 @@
 #  Track Ports and Networks for Vagrant Environments
 
-###-------  Ports for Port Forwarding
+###-------  Reserved Ports for Port Forwarding
 2800-2900   Default Dynamic Range
 3800-3900   Multi Server testing
 
 # SSH Port Forwarding
 2222  - Vagarant default port
 ......
-3800  - master
-3801  - worker01
-3802  - worker02
-3803  - worker03
-3804  - worker04
-3805  - worker05
+MultiServer
+SSH
+  3800  - master
+  3801  - worker01
+  3802  - worker02
+  3803  - worker03
+  3804  - worker04
+  3805  - worker05
+
 ......
-3820  - cephadmin
-3821  - osd01
-3822  - osd02
-3823  - osd03
-3824  - mon01
-3825  - mon02
+Ceph/Minio
+SSH
+  3820  - cephadmin
+  3821  - osd01
+  3822  - osd02
+  3823  - osd03
+  3824  - mon01
+  3825  - mon02
+
 ......
-8000  Admin VM
+Admin VM
+  8000  Admin VM SSH
+  8001  Admin VM Prometheus (9090)
+  8002  Admin VM HTTP (8080)
+
 ......
-2901  - Centos testing SSH
-2902  - Centos testing Port 80
-2903  - Centos testing Port 8080
-2904  - Centos testing Port 9090 (Prometheus)
-2910  - MultiDisk SSH
-2911  - MultiDisk Port 80
-2912  - MultiDisk Port 8080
-2920  - ClearLinux SSH
-2921  - ClearLinux Port 80
-2922  - ClearLinux Port 8080
+Centos VM
+  2901  - Centos testing SSH
+  2902  - Centos testing Port 80
+  2903  - Centos testing Port 8080
+  2904  - Centos testing Port 9090 (Prometheus)
+
+......
+MultiDisk
+  2910  - MultiDisk SSH
+  2911  - MultiDisk Port 80
+  2912  - MultiDisk Port 8080
+
+......
+ClearLinux
+  2920  - ClearLinux SSH
+  2921  - ClearLinux Port 80
+  2922  - ClearLinux Port 8080
+
 ......
 General Ports to know for forwarding
 9000  - Minio

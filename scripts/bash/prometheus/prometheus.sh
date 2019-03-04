@@ -76,4 +76,9 @@ echo "###--- Restart/Reload services"
 systemctl daemon-reload
 systemctl start prometheus
 systemctl enable prometheus
-systemctl status prometheus
+
+if $(systemctl is-active --quiet prometheus)
+   then
+    echo "Prometheus is running"
+fi
+

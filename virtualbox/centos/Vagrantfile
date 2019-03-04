@@ -152,7 +152,7 @@ Vagrant.configure(2) do |config|
   # Copy files for Prometheus
   config.vm.provision "Copy prometheus.service", type: "file" do |file|
     file.source = "../../scripts/bash/prometheus/prometheus.service" 
-    file.destination =  "~/prometheus.yml"
+    file.destination =  "~/prometheus.service"
   end  
 
   config.vm.provision "Copy prometheus.yml", type: "file" do |file|
