@@ -17,7 +17,7 @@
   ip1: 172.10.0.120
   ip2: 172.16.0.120
   ip3: 172.18.0.120
-  port: 3820
+  ssh_port: 3820
 - name: osd01
   box: centos/7
   os: centos
@@ -27,7 +27,7 @@
   ip1: 172.10.0.121
   ip2: 172.16.0.121
   ip3: 172.18.0.121
-  port: 3821
+  ssh_port: 3821
 - name: osd02
   box: centos/7
   os: centos
@@ -37,7 +37,7 @@
   ip1: 172.10.0.122
   ip2: 172.16.0.122
   ip3: 172.18.0.122
-  port: 3822
+  ssh_port: 3822
 - name: osd03
   box: centos/7
   os: centos
@@ -47,7 +47,7 @@
   ip1: 172.10.0.123
   ip2: 172.16.0.123
   ip3: 172.18.0.123
-  port: 3823
+  ssh_port: 3823
 - name: client01
   box: centos/7
   os: centos
@@ -57,7 +57,7 @@
   ip1: 172.10.0.124
   ip2: 172.16.0.124
   ip3: 172.18.0.124
-  port: 3824
+  ssh_port: 3824
 - name: client02
   box: centos/7
   os: centos
@@ -67,6 +67,6 @@
   ip1: 172.10.0.125
   ip2: 172.16.0.125
   ip3: 172.18.0.125
-  port: 3825
+  ssh_port: 3825
 
 ...

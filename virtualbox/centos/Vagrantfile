@@ -39,11 +39,13 @@ Vagrant.configure(2) do |config|
 
   # Do some port mapping - Vagrant will try 2222 for SSH if it is in use it will grab the first 
   # unused port in the above range
+  # 9000 = Minio
+  # 9090 - Prometheus
   config.vm.network "forwarded_port", guest: 22, host: 2901
   config.vm.network "forwarded_port", guest: 80, host: 2902
   config.vm.network "forwarded_port", guest: 8080, host: 2903
-  config.vm.network "forwarded_port", guest: 9090, host: 2904
-  config.vm.network "forwarded_port", guest: 9000, host: 9000
+  config.vm.network "forwarded_port", guest: 9000, host: 2904
+  config.vm.network "forwarded_port", guest: 9090, host: 2905
 
   # Need to test this one more
   #config.vm.synced_folder "./nginx", "/var/www", create: true, group: "nginx", owner: "nginx"
@@ -140,9 +142,9 @@ Vagrant.configure(2) do |config|
 
   ###----  This section has test code for installing various packages
   ###----  you can copy them into other Vagrantfiles as needed because
-  ###----  they all reference a copmmon scripts directory ../../scripts
+  ###----  they all reference a common scripts directory ../../scripts
   
-  ### Type=file
+  ### Type=file - runs as "vagrant user"
   # Copy in the hosts file
   config.vm.provision "Copy /etc/hosts", type: "file" do |file|
     file.source = "../../scripts/env/hosts" 
@@ -173,16 +175,21 @@ Vagrant.configure(2) do |config|
     script.path = "../../scripts/bash/config/bootstrap.sh"
   end
 
-  # nginx
-  #config.vm.provision "Setup nginx", type: "shell" do |script|
-  #  script.path = "../../scripts/bash/nginx/setupnginx.sh"
-  #end
+  # collectd
+  config.vm.provision "Setup nginx", type: "shell" do |script|
+    script.path = "../../scripts/bash/config/collectd.sh"
+  end
 
   # Prometheus
   config.vm.provision "Setup Prometheus", type: "shell" do |script|
     script.path = "../../scripts/bash/prometheus/prometheus.sh"
   end
   
+  # nginx
+  #config.vm.provision "Setup nginx", type: "shell" do |script|
+  #  script.path = "../../scripts/bash/nginx/setupnginx.sh"
+  #end
+
   # Docker
   #config.vm.provision "Install Docker", type: "shell" do |script|
   # script.path = "../../scripts/bash/docker/setupdocker.sh"
@@ -192,7 +199,6 @@ Vagrant.configure(2) do |config|
   #config.vm.provision "Install SPDK", type: "shell" do |script|
   #  script.path = "../../scripts/bash/config/spdk.sh"
   #end
-
 
 
   ### Example of a Reboot in the middle of provisioning (not working)

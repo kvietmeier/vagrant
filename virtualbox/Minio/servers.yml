@@ -1,0 +1,81 @@
+---
+# Data structure for including in a Vagrantfile
+# Builds a set of severs based on the yaml data structure in this file
+# Created By: Karl Vietmeier
+# The newtworks can be configured by uncommenting the appropriate line in the Vagrantfile.
+
+#  ssh_user: vagrant
+#  ssh_pass: vagrant
+
+###--- Create Centos VMs for Minio
+# Notes:
+#   * Need the Puppetlabs box for reliable NVMe support
+
+# Wanted/ToDo - collapse the host setups
+# base_ip: 172.10.0.130
+# base_ssh_port: 3830
+# server_box: "puppetlabs/centos-7.2-64-nocm"
+
+###----------- Define VM configurations
+- name: admin
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: admin.sh
+  ram: 1024
+  cpus: 1
+  ip1: 172.10.0.130
+  ip2: 172.16.0.130
+  ssh_port: 3830
+  minio_port: 3840
+- name: minio01
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: minio.sh
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.131
+  ip2: 172.16.0.131
+  ssh_port: 3831
+  minio_port: 3841
+- name: minio02
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: minio.sh
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.132
+  ip2: 172.16.0.132
+  ssh_port: 3832
+  minio_port: 3842
+- name: minio03
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: minio.sh
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.133
+  ip2: 172.16.0.133
+  ssh_port: 3833
+  minio_port: 3843
+- name: minio04
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: minio.sh
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.134
+  ip2: 172.16.0.134
+  ssh_port: 3834
+  minio_port: 3844
+- name: minio05
+  box: puppetlabs/centos-7.2-64-nocm
+  os: centos
+  script: minio.sh
+  ram: 512
+  cpus: 1
+  ip1: 172.10.0.135
+  ip2: 172.16.0.135
+  ssh_port: 3835
+  minio_port: 3845
+
+...

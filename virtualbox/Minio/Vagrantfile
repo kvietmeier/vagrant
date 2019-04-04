@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# Vagrantfile to create a bootstrapped Ceph cluster configuration
+# Vagrantfile to create a bootstrapped Storage cluster configuration
 # Requires "servers.yml" to be in local directory
 #
 # Will create multiple nodes with several disks per node
@@ -30,66 +30,92 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Default is 2200..something, but port 2200 is used by some tools
   config.vm.usable_port_range = 2800..2900
- 
-  # Iterate through entries in YAML file - "servers" is a hash to iterate over using Ruby syntax.
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  # Iterate through entries in YAML file - "servers" is a yaml dictionary to iterate over using Ruby syntax.
   servers.each do |servers|
     config.vm.define servers["name"] do |srv|
+      # Make sure the VMs get named correctly in the corect locations
       srv.vm.box = servers["box"]
       srv.vm.hostname = servers["name"]
 
       # Network setup
       srv.vm.network "forwarded_port", guest: 22, host: servers["ssh_port"]
+      srv.vm.network "forwarded_port", guest: 9000, host: servers["minio_port"]
       srv.vm.network "private_network", ip: servers["ip1"]
       srv.vm.network "private_network", ip: servers["ip2"]
 
-      # VM parameters
+      ###-------   VirtualBox Provider - Build the Physical VM and configure devices
       srv.vm.provider :virtualbox do |vb|
-        # Create a group in Virtualbox
-        vb.customize ["modifyvm", :id, "--groups", "/Ceph" ]
         
         # Basic VM config - modify in servers.yml
         vb.name = servers["name"]
         vb.memory = servers["ram"]
         vb.cpus = servers["cpus"]
         
-        # Configure system parameters - get rid of extra stuff
-        vb.customize ["modifyvm", :id, "--ioapic", "on" ]
-        vb.customize ["modifyvm", :id, "--audio", "none" ]
-        vb.customize ["modifyvm", :id, "--usb", "off" ]
+        ###-------- Configure system parameters
+        #  Get rid of extra stuff and use the right chipsets
+        #  --groups : Create a VM group in VirtualBox
+        #  --ioapic : Enable APIC support
+        {
+          '--audio' => 'none',
+          '--usb' => 'off',
+          '--ioapic' => 'on',
+          '--chipset' => 'ich9'
+        }.each { |k, v| vb.customize ['modifyvm', :id, k.to_s, v.to_s] }
 
-        # Add SATA controller - you can only have one
-        vb.customize ['storagectl', :id, '--name',  'SATA Controller', '--add', 'sata',  '--controller', 'IntelAhci', '--portcount', 6]
+        vb.customize ["modifyvm", :id, "--groups", "/StorageNodes" ]
 
-        ###-------- Disk setup ---------###
-        ## Check the hostmame - only add extra drives to the OSD nodes, not admin or clients.
-        if ("#{servers["name"]}").include? "osd"
-        
-          # Loop and create/attach the OSD disks
-         (1..3).each do |num|
-           # Create OSD drive/s 
-           unless File.exist?("#{servers["name"]}-OSD-0#{num}.vdi")
-             vb.customize ['createhd', '--filename', "#{servers["name"]}-OSD-0#{num}.vdi", '--size', 512]
-           end  # End create OSD drive
+        # Support for the SSE4.x instruction is required in some versions of VB.
+        {
+          'VBoxInternal/CPUM/SSE4.1' => '1',
+          'VBoxInternal/CPUM/SSE4.2' => '1'
+        }.each { |k, v| vb.customize ['setextradata', :id, k.to_s, v.to_s] }
 
-            # Attach the disks to the SATA controller
-            vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', "#{num}", '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-OSD-0#{num}.vdi"]
+        ###--------      SATA Controller setup     ---------###
+        #vb.customize ['storagectl', :id,
+        #  '--name', 'SATA Controller',
+        #  '--add', 'sata',
+        #  '--controller', 'IntelAhci',
+        #  '--portcount', 6
+        #]
 
-            # Add 1 to get port for Journal disk
-            $port = num += 1
-          end # Create/attach OSD disks  
+        ###-------- NVMe Controller and Disk setup ---------###
+        # Create NVMe controller - don't crerate it if the drive already exists (we are restarting the VM)
+        vb.customize [
+          'storagectl', :id,
+          '--name', 'NVMe Controller',
+          '--add', 'pcie',
+          '--controller', 'NVMe',
+          '--portcount', '6',
+          '--bootable', 'off'
+        ] unless File.exist?("#{servers['name']}-Data01.vdi")
 
-          # Create Journal Drive
-          unless File.exist?("#{servers["name"]}-Journal.vdi")
-            vb.customize ['createhd', '--filename', "#{servers["name"]}-Journal.vdi", '--size', 256]
-          end  # End journal create disk
+        # Loop through servers.yml and check the hostmame - not really needed here but might 
+        # want to add other logic later
+        if servers['name'].to_s.include? 'minio'
+          (1..3).each do |num|
+            # Create the drives
+            vb.customize [
+              'createmedium',
+              '--filename', "#{servers['name']}-Data0#{num}.vdi",
+              '--variant', 'Fixed',
+              '--size', '512'
+            ] unless File.exist?("#{servers['name']}-Data0#{num}.vdi")
 
-          # Attach journal disk to $port on SATA controller
-          vb.customize [ 'storageattach', :id, '--storagectl', 'SATA Controller', '--port', $port, '--device', 0, '--type', 'hdd', '--medium', "./#{servers["name"]}-Journal.vdi"]
+            # Attach the drives
+            vb.customize [
+              'storageattach', :id,
+              '--storagectl', 'NVMe Controller',
+              '--port', num.to_s,
+              '--type', 'hdd',
+              '--medium', "./#{servers['name']}-Data0#{num}.vdi"
+            ] unless File.exist?("#{servers['name']}-Data0#{num}.vdi")
+          end # End drive creation and attachment loop
 
-        end  # End if - check for osd nodes
-        ###-------- End Disk Setup Section ---------###
+        end  # End Server VM configuration loop over servers.yml
 
-      end # vm.provider
+      end # End VirtualBox Provider - VM Configuration
 
       ###-----------------------------------------------------------------------------------###
       ###-------------------           Provisioner Section               -------------------###
@@ -133,20 +159,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          script.path = "../../scripts/bash/config/bootstrap.sh"
       end
 
-      # - Run on every node - Ceph common stuff
-      config.vm.provision "Install Ceph Common Stuff", type: "shell" do |script|
-         script.path = "../../scripts/bash/ceph/ceph-common.sh"
-      end
+      # - Run on every node -Minio common stuff
+      #config.vm.provision "Install Ceph Common Stuff", type: "shell" do |script|
+      #   script.path = "../../scripts/bash/minio/minio-common.sh"
+      #end
 
       # Role based setup is in the servers.yml file - pull it out as a key:value
-      config.vm.provision "Role", type: "shell" do |script|
-         script.path = "../../scripts/bash/ceph/#{servers["script"]}"
-      end
+      #config.vm.provision "Role", type: "shell" do |script|
+      #   script.path = "../../scripts/bash/minio/#{servers["script"]}"
+      #end
       
       ###--------------------- End Provisioning
 
     end  # config.vm.define
-  end  # servers.each
+  end  # End servers.each configuration loop over servers.yml
 end  # Vagrant.configure
 
 
