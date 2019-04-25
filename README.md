@@ -1,10 +1,10 @@
 ## Vagrant Projects
 
-I am working on setting up Vagrant for Windows 10 and experimenting with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV for now, there are just too many bugs and challenges with networking and mounting shared folders.  I really wanted to use HyperV since it is required if you want to install and use Docker4Windows, and I wanted to use a completely Microsoft/Windows toolset.  But - both D4W and HyperV are still WIP.
+I use Vagrant for Windows 10 and have experimented with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV for now, there are just too many bugs and challenges with networking and mounting shared folders.  I really wanted to use HyperV since it is required if you want to install and use Docker4Windows, and I wanted to use a completely Microsoft/Windows toolset.  But - both D4W and HyperV are still WIP for now.
 
 VMware Workstation is TBD
 
-**NOTE - All of these examples are built/run using Windows 10 "Holiday Edition" and PowerShell.**
+**NOTE - All of these examples are built/run using Windows 10 and PowerShell.**
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ There are many tutorials out there on getting Virtualbox and Vagrant installed s
 * [ConEmu](https://conemu.github.io/) - Windows terminal replacement can be configured to give "iterm like" functionality
 * [Visual Studio Code](https://code.visualstudio.com/) - Free and lightweight version of Visual Studio
 
-Powershell wrapper function for git:
+Powershell wrapper function/alias for git:
 
 ~~~powershell
 function gpush {
