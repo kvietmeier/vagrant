@@ -1,0 +1,22 @@
+##
+# Hosts file for Vagrant Environment
+# Append to existing /etc/hosts
+#
+# Multi-VM
+
+# 172.10.0
+172.10.0.100	master
+172.10.0.101	worker01
+172.10.0.102	worker02
+172.10.0.103	worker03
+172.10.0.104	worker04
+172.10.0.105	worker05
+
+# 172.16.0
+172.16.0.100	master-bk
+172.16.0.101	worker01-bk
+172.16.0.102	worker02-bk
+172.16.0.103	worker03-bk
+172.16.0.104	worker04-bk
+172.16.0.105	worker05-bk
+
