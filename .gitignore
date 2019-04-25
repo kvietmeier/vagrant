@@ -30,6 +30,10 @@
 *.vhd
 *.vhd.part
 
+# Exclude any ISO files that might get left behind
+*.ISO
+
+
 ### In case you clone in some source code you need to compile
 *.a
 *.cmd
