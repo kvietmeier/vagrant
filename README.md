@@ -31,7 +31,7 @@ function gpush {
 
 ### Author
 
-* **Karl Vietmeier**
+* **Karl Vietmeier - Intel Cloud Solutions Architect**
 
 ### Acknowledgments
 
