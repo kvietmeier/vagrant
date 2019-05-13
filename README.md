@@ -20,7 +20,7 @@ There are many tutorials out there on getting Virtualbox and Vagrant installed s
 * [ConEmu](https://conemu.github.io/) - Windows terminal replacement can be configured to give "iterm like" functionality
 * [Visual Studio Code](https://code.visualstudio.com/) - Free and lightweight version of Visual Studio
 
-Powershell wrapper function/alias for git:
+Powershell wrapper function/alias for git4win:
 
 ~~~powershell
 function gpush {
