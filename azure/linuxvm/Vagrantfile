@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Created By: Karl Vietmeier
+# Basic Vagrantfile for the Azure provider
+# https://github.com/Azure/vagrant-azure
+
+###--- Vars
+# Path to the local users public key file in $HOME/.ssh
+# We use it later in the shell provisioner to populate authorized_keys
+ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+ssh_priv_key = File.readlines("#{Dir.home}/.ssh/id_rsa").first.strip
+adminvm_karlvkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_karlv_id_rsa.pub").first.strip
+adminvm_rootkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/adminvm_root_id_rsa.pub").first.strip
+wslsshkey = File.readlines("#{Dir.home}/Documents/Projects/vagrant/certs/wslsshkey_id_rsa.pub").first.strip
+
+
+###--- Main block
+Vagrant.configure('2') do |config|
+  config.vm.box = 'azure'
+  config.ssh.private_key_path = File.readlines("#{Dir.home}/.ssh/id_rsa").first.strip
+  
+
+  config.vm.provider :azure do |azure, override|
+    ###--- Mandatory Settings 
+    # each of the below values will default to use the env vars named as below if not specified explicitly
+    azure.tenant_id = ENV['AZURE_TENANT_ID']
+    azure.client_id = ENV['AZURE_CLIENT_ID']
+    azure.client_secret = ENV['AZURE_CLIENT_SECRET']
+    azure.subscription_id = ENV['AZURE_SUBSCRIPTION_ID']
+
+    # vm_password is optional when specifying the private_key_file with Linux VMs
+    # When building a Windows VM and using WinRM this setting is used to authenticate via WinRM (PowerShell Remoting)
+    azure.vm_image_urn = 'OpenLogic:CentOS:7.5:latest'
+    #azure.vm_name = 'vagrant01'
+    #azure.vm_user = 'vagrant'
+    #azure.vm_password = 'Pass@word123'
+
+    ###--- *Nix Settings
+    #azure.ssh_port = '22'
+    #azure.private_key_path = File.readlines("#{Dir.home}/.ssh/id_rsa").first.strip
+    
+    ###--- Resource Settings
+    #azure.storage_acct_name = 'vagrantstorage'
+    #azure.cloud_service_name = 'Vagrant' 
+    #azure.deployment_name = 'Vagrant' 
+    #azure.location = 'westus'
+
+  end
+end

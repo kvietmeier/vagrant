@@ -13,12 +13,14 @@ echo "Admin" >> /home/vagrant/file.txt
 
 # Some basic setup stuff
 # Create a directory for files
-mkdir /home/cephuser/1-cluster
-chown cephuser:cephuser /home/cephuser/1-cluster
-
+mkdir /home/cephuser/cluster
+chown cephuser:cephuser /home/cephuser/cluster
 
 echo "Install ceph-deploy"
 yum install ceph-deploy -y  > /dev/null 2>&1
+
+echo "Install ceph-ansible"
+yum install ceph-ansible -y  > /dev/null 2>&1
 
 ###---  Configure Ceph
 
