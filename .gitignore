@@ -8,6 +8,7 @@
  
 # Exclude certificates and identities
 /certs/
+/Private
 
 # exclude the ignore file
 .gitignore
@@ -30,8 +31,21 @@
 *.vhd
 *.vhd.part
 
-# Exclude any ISO files that might get left behind
+# Exclude any ISO and other VM related files that might get left behind
 *.ISO
+*.vhdx
+*.vhd
+*.zip
+
+# Ignore temporary or scratch files
+**/foo*
+**/*.log
+[Tt]emp/
+*.log
+*.bak
+*.[Tt]emp
+*.tmp
+*[Ss]cratch*
 
 
 ### In case you clone in some source code you need to compile
