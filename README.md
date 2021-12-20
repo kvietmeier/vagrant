@@ -1,14 +1,14 @@
 ## Vagrant Projects
 
-NOTE: This is no longer an active repo.
+**NOTE: This is no longer an active repo.**
 
 I use Vagrant for Windows 10 and have experimented with Virtualbox, HyperV, and VMware Workstation.  I have tested and discarded HyperV, there are just too many bugs and challenges with networking and mounting shared folders. I really wanted to use HyperV since it is required if you want to install and use Docker4Windows, and I wanted to use a completely Microsoft/Windows toolset but both D4W and HyperV are still WIP for now. 
 
-Update - Hyper-V, Virtualbox, and VMware all play nicely together and Docker4Windows is used alongside WSL for things like Minikube and Kind so working with a 100% MSFT toolset ends up being very doable and efficient.
+**Update** - Hyper-V, Virtualbox, and VMware all play nicely together and Docker4Windows is used alongside WSL for things like Minikube and Kind so working with a 100% MSFT toolset ends up being very doable and efficient.
 
 VMware Workstation is TBD
 
-**NOTE - All of these examples are built/run using Windows 10 and PowerShell.**
+**All of these examples are built/run using Windows 10 and PowerShell.**
 
 ## Getting Started
 
