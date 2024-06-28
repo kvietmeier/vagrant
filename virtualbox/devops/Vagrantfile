@@ -1,9 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 ### Multi node example
-### Creates 3 VMs from the "nodes" hash
-### Example of using a hash created in the Vagrant file and setting IP from a hash value
+# This Vagrantfile creates a multi-node virtual environment using VirtualBox 
+# as the provider. It sets up three VMs (one master and two nodes) with 
+# specified IP addresses and basic configurations. 
+#
+# Notes:
+# Example of using a hash created in the Vagrant file and setting IP from a hash value
+# Creates the 3 VMs from the "nodes" hash
 
+
+# Define a hash to specify the nodes and their IP addresses
 # We set the last octet in IPV4 address here
 nodes = {
  'master' => [1, 120],
@@ -15,21 +22,28 @@ Vagrant.configure("2") do |config|
   # Virtualbox
   config.vm.box = "bento/centos-7.4"
 
-  # Default is 2200..something, but port 2200 is used by forescout NAC agent.
+  # Set the range of usable ports to avoid conflicts with other software
   config.vm.usable_port_range= 2800..2900
 
+  # Iterate over each node in the nodes hash
   nodes.each do |prefix, (count, ip_start)|
+    # Create the specified number of VMs
+
     count.times do |i|
+      # Define the hostname for each VM
       hostname = "%s" % [prefix, (i+1)]
 
+      # Configure each VM
       config.vm.define "#{hostname}" do |box|
         box.vm.hostname = "#{hostname}"
         box.vm.network :private_network, ip: "172.10.0.#{ip_start+i}", :netmask => "255.255.255.0"
         box.vm.network :private_network, ip: "172.16.0.#{ip_start+i}", :netmask => "255.255.255.0" 
 
         box.vm.provider :virtualbox do |vb|
-          # Old example - no alias for memory and CPU then
+          # Set the memory of the VM to 512 MB
           vb.customize ["modifyvm", :id, "--memory", 512]
+
+          # Set the number of CPUs for the VM to 1
           vb.customize ["modifyvm", :id, "--cpus", 1]
         end # box.vm
 
@@ -41,7 +55,7 @@ Vagrant.configure("2") do |config|
   
   ### Add global tasks done on every node here
 
-  # Do some provisioning
+  # Do some provisioning - Add a shell provisioner to run a script on all nodes
   config.vm.provision "shell", inline: <<-SHELL
     echo "Shell Provisioner Placeholder"
   SHELL
